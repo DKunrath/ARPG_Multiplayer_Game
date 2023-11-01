@@ -1,25 +1,22 @@
+using DK;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace DK
 {
-    public class ResetActionFlags : StateMachineBehaviour
+    public class ResetIsJumping : StateMachineBehaviour
     {
         CharacterManager characterManager;
+
         // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
         override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             if (characterManager == null)
-            { 
+            {
                 characterManager = animator.GetComponent<CharacterManager>();
             }
 
-            // This is called when an action ends, and the state returns to empty
-            characterManager.isPerformingAction = false;
-            characterManager.canMove = true;
-            characterManager.canRotate = true;
-            characterManager.applyRootMotion = false;
             characterManager.isJumping = false;
         }
 

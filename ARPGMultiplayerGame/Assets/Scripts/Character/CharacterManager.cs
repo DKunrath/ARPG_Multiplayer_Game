@@ -28,6 +28,8 @@ namespace DK
 
         protected virtual void Update()
         {
+            animator.SetBool("IsGrounded", isGrounded);
+
             // If this character is being controlled from our side, then assign its network position and rotation to the position and rotation of our transform
             if (IsOwner)
             {

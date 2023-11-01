@@ -20,6 +20,12 @@ namespace DK
         [SerializeField] float sprintingSpeed = 8f;
         [SerializeField] float rotationSpeed = 15f;
 
+        [Header("Jump")]
+        [SerializeField] float jumpHeight = 4f;
+        [SerializeField] float jumpForwardSpeed = 5f;
+        [SerializeField] float freeFallSpeed = 2f;
+        private Vector3 jumpDirection;
+
         [Header("Dodge Settings")]
         private Vector3 rollDirection;
 
@@ -56,7 +62,9 @@ namespace DK
             // Grounded Movement
             HandleGroundedMovement();
             // Jumping Movement
-
+            HandleJumpingMovement();
+            // Free Fall Movement
+            HandleFreeFallMovement();
             // Rotation
             HandleRotation();
             // Falling
@@ -100,6 +108,28 @@ namespace DK
                     // Move at walking speed
                     player.characterController.Move(moveDirection * walkingSpeed * Time.deltaTime);
                 }
+            }
+        }
+
+        private void HandleJumpingMovement()
+        {
+            if (player.isJumping)
+            {
+                player.characterController.Move(jumpDirection * jumpForwardSpeed * Time.deltaTime);
+            }
+        }
+
+        private void HandleFreeFallMovement()
+        {
+            if (!player.isGrounded)
+            {
+                Vector3 freeFallDirection;
+
+                freeFallDirection = PlayerCamera.Instance.transform.forward * PlayerInputManager.Instance.verticalInput;
+                freeFallDirection += PlayerCamera.Instance.transform.right * PlayerInputManager.Instance.horizontalInput;
+                freeFallDirection.y = 0;
+
+                player.characterController.Move(freeFallDirection * freeFallSpeed * Time.deltaTime);
             }
         }
 
@@ -185,11 +215,35 @@ namespace DK
             player.playerAnimatorManager.PlayTargetActionAnimation("Main_Jump_Start", false);
 
             player.isJumping = true;
+
+            jumpDirection = PlayerCamera.Instance.cameraObject.transform.forward * PlayerInputManager.Instance.verticalInput;
+            jumpDirection += PlayerCamera.Instance.cameraObject.transform.right * PlayerInputManager.Instance.horizontalInput;
+            jumpDirection.y = 0;
+
+            if (jumpDirection != Vector3.zero)
+            {
+                // If we are sprinting, jump direction is at full distance
+                if (player.playerNetworkManager.isSprinting.Value)
+                {
+                    jumpDirection *= 1f;
+                }
+                // Else if we are running, jump direction is at hald distance
+                else if (PlayerInputManager.Instance.moveAmount > 0.5f)
+                {
+                    jumpDirection *= 0.5f;
+                }
+                // Else if we are walking, jump direction is at quarter distance
+                else if (PlayerInputManager.Instance.moveAmount <= 0.5f)
+                {
+                    jumpDirection *= 0.25f;
+                }
+            }
         }
 
         public void ApplyJumpingVelocity()
-        { 
+        {
             // Apply an upward velocity depending on forces in our game
+            yVelocity.y = Mathf.Sqrt(jumpHeight * -2 * gravityForce);
         }
     }
 }

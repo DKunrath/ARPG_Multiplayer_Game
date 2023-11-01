@@ -145,6 +145,7 @@ namespace DK
             HandleCameraMovementInput();
             HandleDodgeInput();
             HandleSprintInput();
+            HandleJumpInput();
             HandleManaDrainInput();
             HandleJumpInput();
         }
