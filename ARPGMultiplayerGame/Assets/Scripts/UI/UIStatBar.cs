@@ -14,18 +14,18 @@ namespace DK
             slider.value = newValue;
         }
 
-        public virtual void SetMaxStat(int maxValue)
+        public virtual void SetMaxStat(float maxValue)
         {
             slider.maxValue = maxValue;
             slider.value = maxValue;
         }
 
-        public virtual void RegenerateMana(int manaToRegeneratePerSecond)
+        public virtual void RegenerateMana(float manaToRegeneratePerSecond)
         {
             slider.value += manaToRegeneratePerSecond;
         }
 
-        public virtual void RemoveMana(int manaToDrain)
+        public virtual void RemoveMana(float manaToDrain)
         { 
             slider.value -= manaToDrain;
         }

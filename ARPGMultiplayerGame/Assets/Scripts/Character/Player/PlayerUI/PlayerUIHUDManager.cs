@@ -14,17 +14,17 @@ namespace DK
             manaBar.SetStat(newValue);
         }
 
-        public void SetMaxManaValue(int maxMana)
+        public void SetMaxManaValue(float maxMana)
         {
             manaBar.SetMaxStat(maxMana);
         }
 
-        public void RegenerateMana(int manaToRegenerate)
+        public void RegenerateMana(float manaToRegenerate)
         { 
             manaBar.RegenerateMana(manaToRegenerate);
         }    
 
-        public void RemoveMana(int manaToDrain)
+        public void RemoveMana(float manaToDrain)
         {
             manaBar.RemoveMana(manaToDrain);
         }
