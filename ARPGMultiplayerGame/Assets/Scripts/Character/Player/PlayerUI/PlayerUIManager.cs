@@ -13,6 +13,7 @@ namespace DK
         [SerializeField] bool startGameAsClient;
 
         [HideInInspector] public PlayerUIHUDManager playerUIHUDManager;
+        [HideInInspector] public PlayerUIPopUpManager playerUIPopUpManager;
 
         private void Awake()
         {
@@ -27,6 +28,7 @@ namespace DK
             }
 
             playerUIHUDManager = GetComponentInChildren<PlayerUIHUDManager>();
+            playerUIPopUpManager = GetComponentInChildren<PlayerUIPopUpManager>();
         }
 
         private void Start()

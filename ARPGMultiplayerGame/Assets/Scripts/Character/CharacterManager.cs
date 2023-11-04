@@ -93,5 +93,10 @@ namespace DK
 
             // Disable character model
         }
+
+        public virtual void ReviveCharacter()
+        { 
+            
+        }
     }
 }

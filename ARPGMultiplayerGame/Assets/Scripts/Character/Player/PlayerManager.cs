@@ -8,6 +8,9 @@ namespace DK
 {
     public class PlayerManager : CharacterManager
     {
+        [Header("Debug Menu")]
+        [SerializeField] bool respawnCharacter = false;
+
         [HideInInspector] public PlayerLocomotionManager playerLocomotionManager;
         [HideInInspector] public PlayerAnimatorManager playerAnimatorManager;
         [HideInInspector] public PlayerNetworkManager playerNetworkManager;
@@ -40,6 +43,8 @@ namespace DK
             // Regen Mana
             HandleManaRegeneration();
             //playerStatsManager.RegenerateMana();
+
+            DebugMenu();
         }
 
         protected override void LateUpdate()
@@ -68,6 +73,34 @@ namespace DK
             }
 
             playerNetworkManager.currentHealth.OnValueChanged += playerNetworkManager.CheckHP;
+        }
+
+        public override IEnumerator ProcessDeathEvent(bool manuallySelectDeathAnimation = false)
+        {
+            if (IsOwner)
+            {
+                PlayerUIManager.Instance.playerUIPopUpManager.SendYouDiedPopUp();
+            }
+
+            return base.ProcessDeathEvent(manuallySelectDeathAnimation);
+
+            // Check for players that are alive, if there are none alive (0) respawn characters
+        }
+
+        public override void ReviveCharacter()
+        {
+            base.ReviveCharacter();
+
+            if (IsOwner)
+            { 
+                playerNetworkManager.currentHealth.Value = playerNetworkManager.maxHealth.Value;
+                playerNetworkManager.currentMana.Value = playerNetworkManager.maxMana.Value;
+                // Restore everything needed
+
+                // Play rebirth effects
+
+                playerAnimatorManager.PlayTargetActionAnimation("Empty", false);
+            }
         }
 
         public void SaveGameDataToCurrentCharacterData(ref CharacterSaveData currentCharacterData)
@@ -131,6 +164,17 @@ namespace DK
             PlayerUIManager.Instance.playerUIHUDManager.SetNewHealthValue(0, Mathf.RoundToInt(playerNetworkManager.currentHealth.Value));
             PlayerUIManager.Instance.playerUIHUDManager.SetNewManaValue(0, Mathf.RoundToInt(playerNetworkManager.currentMana.Value));
             
+        }
+
+        // DEBUG DELETE LATER
+
+        private void DebugMenu()
+        {
+            if (respawnCharacter)
+            {
+                respawnCharacter = false;
+                ReviveCharacter();
+            }
         }
 
         #region Mana Drain & Regeneration
