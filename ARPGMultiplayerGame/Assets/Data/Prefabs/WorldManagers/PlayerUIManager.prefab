@@ -75,6 +75,54 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &69431036906386669
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4456072858387055432}
+  - component: {fileID: 3249411117211233907}
+  m_Layer: 0
+  m_Name: PopUpManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4456072858387055432
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69431036906386669}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6548851730379942527}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3249411117211233907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69431036906386669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b7fe388286209b43a0689ad591f8f25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &113556717454498816
 GameObject:
   m_ObjectHideFlags: 0
@@ -2170,6 +2218,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2839950663628258387}
   - component: {fileID: 2839950663628258386}
+  - component: {fileID: 4290130794785448458}
   m_Layer: 5
   m_Name: HpSlider
   m_TagString: Untagged
@@ -2249,6 +2298,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4290130794785448458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2839950663628258384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 674f4314fffef7e4a86e0dbcbdd6a0f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slider: {fileID: 2839950663628258386}
 --- !u!1 &2839950663677444817
 GameObject:
   m_ObjectHideFlags: 0
@@ -2412,6 +2474,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5258671598868421648}
   - component: {fileID: 2437499790841432351}
+  - component: {fileID: 59646176673376732}
   m_Layer: 5
   m_Name: MpSlider
   m_TagString: Untagged
@@ -2491,6 +2554,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &59646176673376732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2878256787256359301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 674f4314fffef7e4a86e0dbcbdd6a0f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slider: {fileID: 2437499790841432351}
 --- !u!1 &3024687423679384909
 GameObject:
   m_ObjectHideFlags: 0
@@ -3056,7 +3132,7 @@ RectTransform:
   m_Father: {fileID: 3295810450533016220}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4209,6 +4285,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7200523219014483818}
+  - {fileID: 4456072858387055432}
   m_Father: {fileID: 6833914806684201217}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4228,7 +4305,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 940743435a13a8d4bae0e5da6cab83e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthBar: {fileID: 4044460399309670853}
+  healthBarPlayerFrame: {fileID: 4290130794785448458}
   manaBar: {fileID: 4688021927727996656}
+  manaBarPlayerFrame: {fileID: 59646176673376732}
 --- !u!1 &5597217909555461452
 GameObject:
   m_ObjectHideFlags: 0
@@ -4560,6 +4640,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5597217911389185918}
   - component: {fileID: 5597217911389185916}
+  - component: {fileID: 4044460399309670853}
   m_Layer: 5
   m_Name: HealthSliderBar
   m_TagString: Untagged
@@ -4640,6 +4721,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4044460399309670853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5597217911389185913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 674f4314fffef7e4a86e0dbcbdd6a0f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slider: {fileID: 5597217911389185916}
 --- !u!1 &5676991829864313486
 GameObject:
   m_ObjectHideFlags: 0
@@ -5804,9 +5898,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 40
+  m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 40
+  m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -5888,7 +5982,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 40/40
+  m_text: 100/100
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3f431344b3745b54e9ff007c29fcc2a4, type: 2}
   m_sharedMaterial: {fileID: -3359197029103750868, guid: 3f431344b3745b54e9ff007c29fcc2a4,

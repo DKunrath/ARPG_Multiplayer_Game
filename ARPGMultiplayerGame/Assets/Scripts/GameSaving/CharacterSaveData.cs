@@ -23,5 +23,13 @@ namespace DK
         public float xPosition;
         public float yPosition;
         public float zPosition;
+
+        [Header("Resources")]
+        public float currentHealth;
+        public float currentMana;
+
+        [Header("Stats")]
+        public int vitality = 10;
+        public int intelligence = 10;
     }
 }

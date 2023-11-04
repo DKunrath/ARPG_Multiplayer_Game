@@ -12,10 +12,19 @@ namespace DK
 
         // Process static effects (adding/removing buffs from talismans etc)
 
-        public void ProcessInstantEffect()
-        { 
+        CharacterManager characterManager;
+
+        protected virtual void Awake()
+        {
+            characterManager = GetComponent<CharacterManager>();
+        }
+
+        public virtual void ProcessInstantEffect(InstantCharacterEffect effect)
+        {
             // Take in an effect
             // Process it
+
+            effect.ProcessEffect(characterManager);
         }
     }
 }

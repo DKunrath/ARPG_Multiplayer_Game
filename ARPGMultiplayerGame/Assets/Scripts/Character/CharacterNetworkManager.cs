@@ -25,13 +25,35 @@ namespace DK
         public NetworkVariable<bool> isSprinting = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         [Header("Stats")]
+        public NetworkVariable<int> vitality = new NetworkVariable<int>(1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> intelligence = new NetworkVariable<int>(1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+        [Header("Resources")]
+        public NetworkVariable<float> currentHealth = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<float> currentMana = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<float> maxHealth = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<float> maxMana = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         protected virtual void Awake()
         { 
             characterManager = GetComponent<CharacterManager>();
+        }
+
+        public void CheckHP(float oldValue, float newValue)
+        {
+            if (currentHealth.Value <= 0) 
+            {
+                StartCoroutine(characterManager.ProcessDeathEvent());
+            }
+
+            // Prevents us from over healing
+            if (characterManager.IsOwner)
+            {
+                if (currentHealth.Value > maxHealth.Value)
+                { 
+                    currentHealth.Value = maxHealth.Value;
+                }
+            }
         }
 
         // A server rpc is a function called from a client, to the server (in our case, the host)

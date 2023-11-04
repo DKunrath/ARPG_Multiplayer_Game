@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4159572731284347970
+--- !u!1 &3303704863694386761
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 474374807780618434}
-  - component: {fileID: 5833198171172645363}
+  - component: {fileID: 3629221073455400465}
+  - component: {fileID: 2010705789306159816}
   m_Layer: 0
-  m_Name: WorldSoundFXManager
+  m_Name: WorldCharacterEffectsManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &474374807780618434
+--- !u!4 &3629221073455400465
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4159572731284347970}
+  m_GameObject: {fileID: 3303704863694386761}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -32,16 +32,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5833198171172645363
+--- !u!114 &2010705789306159816
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4159572731284347970}
+  m_GameObject: {fileID: 3303704863694386761}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 574dab16fddde844095730aed1819933, type: 3}
+  m_Script: {fileID: 11500000, guid: 89597db6c8c6b234fb358f6280594699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rollSFX: {fileID: 8300000, guid: fa671f2b074932a46950074fa7a070a1, type: 3}
+  takeDamageEffect: {fileID: 11400000, guid: ec80518dad4fd2f488ff3e7afe2010db, type: 2}
+  instantEffects:
+  - {fileID: 11400000, guid: c142f759f0744c6498b7fd8a82c1be18, type: 2}
+  - {fileID: 11400000, guid: ec80518dad4fd2f488ff3e7afe2010db, type: 2}

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 namespace DK
@@ -20,10 +21,22 @@ namespace DK
             // Change the value before subtracting/adding it
             // Play sound FX or VFX during effect
 
-            if (characterManager.IsOwner)
-            { 
-                characterManager.characterNetworkManager.currentMana.Value -= manaDamage;
+            // Only owners can edit their network variable
+            if (!characterManager.IsOwner) return;
+
+            if (characterManager.isPerformingAction) return;
+
+            if (characterManager.characterNetworkManager.currentMana.Value <= 0)
+            {
+                characterManager.characterNetworkManager.currentMana.Value = 0;
             }
+
+            if (characterManager.characterNetworkManager.currentMana.Value == 0) return;
+
+            if (manaDamage > characterManager.characterNetworkManager.currentMana.Value) return;
+
+            PlayerUIManager.Instance.playerUIHUDManager.RemoveMana(manaDamage);
+            characterManager.characterNetworkManager.currentMana.Value -= manaDamage;
         }
     }
 }

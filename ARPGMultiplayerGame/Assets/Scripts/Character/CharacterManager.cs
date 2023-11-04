@@ -7,9 +7,15 @@ namespace DK
 {
     public class CharacterManager : NetworkBehaviour
     {
-        [SerializeField] public CharacterController characterController;
-        [SerializeField] public Animator animator;
-        [SerializeField] public CharacterNetworkManager characterNetworkManager;
+        [Header("Status")]
+        public NetworkVariable<bool> isDead = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+        [HideInInspector] public CharacterController characterController;
+        [HideInInspector] public Animator animator;
+        [HideInInspector] public CharacterNetworkManager characterNetworkManager;
+        [HideInInspector] public CharacterEffectsManager characterEffectsManager;
+        [HideInInspector] public CharacterAnimatorManager characterAnimatorManager;
+
 
         [Header("Flags")]
         public bool isPerformingAction = false;
@@ -23,7 +29,11 @@ namespace DK
         {
             DontDestroyOnLoad(this);
 
-            //characterNetworkManager = GetComponent<CharacterNetworkManager>();
+            characterController = GetComponent<CharacterController>();
+            animator = GetComponent<Animator>();
+            characterNetworkManager = GetComponent<CharacterNetworkManager>();
+            characterEffectsManager = GetComponent<CharacterEffectsManager>();
+            characterAnimatorManager = GetComponent<CharacterAnimatorManager>();
         }
 
         protected virtual void Update()
@@ -54,6 +64,34 @@ namespace DK
         protected virtual void LateUpdate()
         { 
             
+        }
+
+        public virtual IEnumerator ProcessDeathEvent(bool manuallySelectDeathAnimation = false)
+        {
+            if (IsOwner)
+            {
+                characterNetworkManager.currentHealth.Value = 0;
+                isDead.Value = true;
+
+                // Reset any flags here that need to be reseted
+                // Nothing yet
+
+                // If we are not grounded, play an aerial death animation
+
+                if (!manuallySelectDeathAnimation)
+                {
+                    // Create a list with different types of death
+                    characterAnimatorManager.PlayTargetActionAnimation("Dead_01", true);
+                }
+            }
+
+            // Play some death SFX
+
+            yield return new WaitForSeconds(5);
+
+            // Award players with runes
+
+            // Disable character model
         }
     }
 }

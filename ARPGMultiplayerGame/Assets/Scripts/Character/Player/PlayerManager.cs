@@ -14,11 +14,8 @@ namespace DK
         [HideInInspector] public PlayerStatsManager playerStatsManager;
 
         [Header("Mana Regeneration Stats")]
-        private int manaToDrainFromPlayer = 10; // Colocar funcao para levar em consideracao a acao a ser usada, e os itens que dominuem o gasto de mana
         private int manaForPlayerToRegenerate = 5; // Colocar funcao para levar em consideracao os itens utilizados pelo player
         private float manaRegenerationTimerDelay = 5f; // Tempo que deve ser esperado antes de regenerar uma porcentagem da mana
-
-
         float timeToWaitBeforeRegeneration = 0f;
 
         protected override void Awake()
@@ -65,14 +62,12 @@ namespace DK
                 PlayerInputManager.Instance.playerManager = this;
                 WorldSaveGameManager.Instance.player = this;
 
-                //playerNetworkManager.currentMana.OnValueChanged += PlayerUIManager.Instance.playerUIHUDManager.SetNewManaValue;
-                //playerNetworkManager.currentMana.OnValueChanged += playerStatsManager.ResetManaRegenerationTimer;
-
-                // This will be moved when saving and loading is added
-                playerNetworkManager.maxMana.Value = playerStatsManager.CalculateManaBasedOnIntelligenceLevel(playerNetworkManager.intelligence.Value);
-                playerNetworkManager.currentMana.Value = playerNetworkManager.maxMana.Value;
-                PlayerUIManager.Instance.playerUIHUDManager.SetMaxManaValue(playerNetworkManager.maxMana.Value);
+                // Update the total amount of health or mana when the stat linked to either changes
+                playerNetworkManager.vitality.OnValueChanged += playerNetworkManager.SetNewMaxHealthValue;
+                playerNetworkManager.intelligence.OnValueChanged += playerNetworkManager.SetNewMaxManaValue;
             }
+
+            playerNetworkManager.currentHealth.OnValueChanged += playerNetworkManager.CheckHP;
         }
 
         public void SaveGameDataToCurrentCharacterData(ref CharacterSaveData currentCharacterData)
@@ -83,6 +78,28 @@ namespace DK
             currentCharacterData.xPosition = transform.position.x;
             currentCharacterData.yPosition = transform.position.y;
             currentCharacterData.zPosition = transform.position.z;
+
+            currentCharacterData.currentHealth = playerNetworkManager.currentHealth.Value;
+            currentCharacterData.currentMana = playerNetworkManager.currentMana.Value;
+
+            currentCharacterData.vitality = playerNetworkManager.vitality.Value;
+            currentCharacterData.intelligence = playerNetworkManager.intelligence.Value;
+        }
+
+        public void SaveNewGameDataToCurrentCharacterData(ref CharacterSaveData currentCharacterData)
+        {
+            currentCharacterData.sceneIndex = 1;
+
+            currentCharacterData.characterName = playerNetworkManager.characterName.Value.ToString();
+            currentCharacterData.xPosition = transform.position.x;
+            currentCharacterData.yPosition = transform.position.y;
+            currentCharacterData.zPosition = transform.position.z;
+
+            currentCharacterData.currentHealth = playerNetworkManager.currentHealth.Value;
+            currentCharacterData.currentMana = playerNetworkManager.currentMana.Value;
+
+            currentCharacterData.vitality = playerNetworkManager.vitality.Value;
+            currentCharacterData.intelligence = playerNetworkManager.intelligence.Value;
         }
 
         public void LoadGameDataFromCurrentCharacterData(ref CharacterSaveData currentCharacterData)
@@ -90,29 +107,33 @@ namespace DK
             playerNetworkManager.characterName.Value = currentCharacterData.characterName;
             Vector3 myPosition = new Vector3(currentCharacterData.xPosition, currentCharacterData.yPosition, currentCharacterData.zPosition);
             transform.position = myPosition;
+
+            playerNetworkManager.vitality.Value = currentCharacterData.vitality;
+            playerNetworkManager.intelligence.Value = currentCharacterData.intelligence;
+
+            playerNetworkManager.maxHealth.Value = playerStatsManager.CalculateHealthBasedOnVitalityLevel(playerNetworkManager.vitality.Value);
+            playerNetworkManager.maxMana.Value = playerStatsManager.CalculateManaBasedOnIntelligenceLevel(playerNetworkManager.intelligence.Value);
+
+            if (currentCharacterData.currentHealth == 0 && currentCharacterData.currentMana == 0)
+            {
+                playerNetworkManager.currentHealth.Value = playerNetworkManager.maxHealth.Value;
+                playerNetworkManager.currentMana.Value = playerNetworkManager.maxMana.Value;
+            }
+            else
+            {
+                playerNetworkManager.currentHealth.Value = currentCharacterData.currentHealth;
+                playerNetworkManager.currentMana.Value = currentCharacterData.currentMana;
+            }
+
+            PlayerUIManager.Instance.playerUIHUDManager.SetMaxHealthValue(playerNetworkManager.maxHealth.Value);
+            PlayerUIManager.Instance.playerUIHUDManager.SetMaxManaValue(playerNetworkManager.maxMana.Value);
+
+            PlayerUIManager.Instance.playerUIHUDManager.SetNewHealthValue(0, Mathf.RoundToInt(playerNetworkManager.currentHealth.Value));
+            PlayerUIManager.Instance.playerUIHUDManager.SetNewManaValue(0, Mathf.RoundToInt(playerNetworkManager.currentMana.Value));
+            
         }
 
         #region Mana Drain & Regeneration
-
-        public void HandleManaDrainInput()
-        {
-            // Only owners can edit their network variable
-            if (!IsOwner) return;
-
-            if (isPerformingAction) return;
-
-            if (playerNetworkManager.currentMana.Value <= 0)
-            {
-                playerNetworkManager.currentMana.Value = 0;
-            }
-
-            if (playerNetworkManager.currentMana.Value == 0) return;
-
-            if (manaToDrainFromPlayer > playerNetworkManager.currentMana.Value) return;
-
-            PlayerUIManager.Instance.playerUIHUDManager.RemoveMana(manaToDrainFromPlayer);
-            playerNetworkManager.currentMana.Value -= manaToDrainFromPlayer;
-        }
 
         public void HandleManaRegeneration()
         {
@@ -131,16 +152,6 @@ namespace DK
                 playerNetworkManager.currentMana.Value += manaForPlayerToRegenerate;
                 timeToWaitBeforeRegeneration = 0;
             }
-        }
-
-        public int GetManaToDrainFromPlayer()
-        {
-            return manaToDrainFromPlayer;
-        }
-
-        public void SetManaToDrainFromPlayer(int manaFromDifferentAttacks)
-        { 
-            manaToDrainFromPlayer = manaFromDifferentAttacks;
         }
 
         public int GetManaForPlayerToRegenerate()

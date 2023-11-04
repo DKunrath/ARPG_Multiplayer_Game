@@ -146,7 +146,6 @@ namespace DK
             HandleDodgeInput();
             HandleSprintInput();
             HandleJumpInput();
-            HandleManaDrainInput();
             HandleJumpInput();
         }
 
@@ -205,16 +204,6 @@ namespace DK
                 // Future Note: Return if menu or UI window is open
                 // Perform dodge
                 playerManager.playerLocomotionManager.AttemptToPerformDodge();
-            }
-        }
-
-        private void HandleManaDrainInput()
-        {
-            if (manaDrainInput)
-            {
-                manaDrainInput = false;
-
-                playerManager.HandleManaDrainInput();
             }
         }
 
