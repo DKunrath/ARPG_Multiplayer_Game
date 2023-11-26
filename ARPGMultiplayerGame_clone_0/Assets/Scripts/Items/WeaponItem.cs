@@ -35,11 +35,24 @@ namespace DK
         // Offensive poise bonus when attacking
 
         // Weapon Modifiers
-        // Light Attack Modifier
+        [Header("Attack Modifiers")]
+        public float light_Attack_01_Modifier = 1.1f;
+        public float spell_Attack_01_Modifier = 1.1f;
         // Heavy Attack Modifier
         // Critical Damage Modifier etc
 
-        // Item based actions (RB, RT, LB, LT)
+        [Header("Mana Cost Modifiers")]
+        public int baseManaCost = 1;
+        public float spellAttackManaCostMultiplier = 0.9f;
+
+        // Item based actions (RB, RT, LB, LT) in Console
+        // Item based actions (RightMouseButton (RMB), ALT+RMB, LeftMouseButton (LMB), ALT+LMB) in keyboard & mouse
+        // Normal Attack: RB on Console or LMB on Mouse&Keyboard
+        // Strong Attack: RT on Console or ALT+LMB on Mouse&Keyboard
+        // Guard: LB on Console or RMB on Mouse&Keyboard
+        // Skill: LT on Console or ALT+RMB on Mouse&Keyboard
+        [Header("Actions")]
+        public WeaponItemAction oh_RB_and_LMB_Action; // One hand Right bumper action and One hand LeftMouseButton
 
         // Ash of War
 

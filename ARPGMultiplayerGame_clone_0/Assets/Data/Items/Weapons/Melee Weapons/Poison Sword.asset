@@ -32,3 +32,9 @@ MonoBehaviour:
   holyDamage: 0
   darkMagicDamage: 0
   poiseDamage: 25
+  light_Attack_01_Modifier: 1.1
+  spell_Attack_01_Modifier: 1.1
+  baseManaCost: 1
+  spellAttackManaCostMultiplier: 0.9
+  oh_RB_and_LMB_Action: {fileID: 11400000, guid: c6025e3d4d3f9014a88d135b18011348,
+    type: 2}

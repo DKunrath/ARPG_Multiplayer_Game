@@ -40,7 +40,7 @@ namespace DK
             else
             {
                 // If we are not jumping, and our falling velocity has not been set
-                if (!characterManager.isJumping && !fallingVelocityHasBeenSet)
+                if (!characterManager.characterNetworkManager.isJumping.Value && !fallingVelocityHasBeenSet)
                 {
                     fallingVelocityHasBeenSet = true;
                     yVelocity.y = fallStartYVelocity;
@@ -64,7 +64,7 @@ namespace DK
         // Draws our ground check sphere in the scene view
         protected void OnDrawGizmosSelected()
         {
-            Gizmos.DrawSphere(characterManager.transform.position, groundCheckSphereRadius);
+            //Gizmos.DrawSphere(characterManager.transform.position, groundCheckSphereRadius);
         }
     }
 }

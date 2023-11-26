@@ -295,6 +295,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "LMB Attack Keyboard",
+                    "type": "Button",
+                    "id": "fb45628c-b1f9-4f7a-a8d3-aa6708150f76",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RB Attack Console",
+                    "type": "Button",
+                    "id": "344c8c65-3622-47e4-9083-fa4af1800463",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -372,6 +390,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Sprint Keyboard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fc9f0097-57e8-4be7-940f-4d05110cd15d",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LMB Attack Keyboard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3ecfbe6a-e8db-4723-9ed5-83a591e22dd9",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RB Attack Console",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

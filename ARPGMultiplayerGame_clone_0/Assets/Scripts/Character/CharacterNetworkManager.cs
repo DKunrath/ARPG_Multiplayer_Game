@@ -23,6 +23,8 @@ namespace DK
 
         [Header("Flags")]
         public NetworkVariable<bool> isSprinting = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> isJumping = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
 
         [Header("Stats")]
         public NetworkVariable<int> vitality = new NetworkVariable<int>(1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -79,6 +81,34 @@ namespace DK
         }
 
         private void PerformActionAnimationFromServer(string animationID, bool applyRootMotion)
+        {
+            characterManager.applyRootMotion = applyRootMotion;
+            characterManager.animator.CrossFade(animationID, 0.2f);
+        }
+
+        // The ServerRpc for the attack action animation
+        [ServerRpc]
+        public void NotifyTheServerOfAttackActionAnimationServerRpc(ulong clientID, string animationID, bool applyRootMotion)
+        {
+            // If this character is the host/server, then activate the client rpc
+            if (IsServer)
+            {
+                PlayAttackActionAnimationForAllClientesClientRpc(clientID, animationID, applyRootMotion);
+            }
+        }
+
+        // A client rpc is sent to all clients present, from the server 
+        [ClientRpc]
+        public void PlayAttackActionAnimationForAllClientesClientRpc(ulong clientID, string animationID, bool applyRootMotion)
+        {
+            // We make sure to not run the function on the character who sent it (so we dont play the animation twice)
+            if (clientID != NetworkManager.Singleton.LocalClientId)
+            {
+                PerformAttackActionAnimationFromServer(animationID, applyRootMotion);
+            }
+        }
+
+        private void PerformAttackActionAnimationFromServer(string animationID, bool applyRootMotion)
         {
             characterManager.applyRootMotion = applyRootMotion;
             characterManager.animator.CrossFade(animationID, 0.2f);

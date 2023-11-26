@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: Straight Sword
   itemIcon: {fileID: 21300000, guid: c61f685f808a18a4982b1c0be957bbfc, type: 3}
   itemDescription: A Regular Sword made of Iron
-  itemID: 0
+  itemID: 1
   weaponModel: {fileID: 2794940564351665817, guid: a482c249eafa9ea41a8e559a3adba0be,
     type: 3}
   strenghtREQ: 10
@@ -32,3 +32,5 @@ MonoBehaviour:
   holyDamage: 0
   darkMagicDamage: 0
   poiseDamage: 25
+  oh_RB_and_LMB_Action: {fileID: 11400000, guid: dc8512560a00fbb4295317af3321cd02,
+    type: 2}

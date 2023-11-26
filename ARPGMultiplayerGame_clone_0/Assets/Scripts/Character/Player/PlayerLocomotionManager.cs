@@ -113,7 +113,7 @@ namespace DK
 
         private void HandleJumpingMovement()
         {
-            if (player.isJumping)
+            if (player.playerNetworkManager.isJumping.Value)
             {
                 player.characterController.Move(jumpDirection * jumpForwardSpeed * Time.deltaTime);
             }
@@ -206,7 +206,7 @@ namespace DK
             if (player.isPerformingAction) return;
 
             // If we are already in a jump, we do not want to allow a jump again until the current jump has finished
-            if (player.isJumping) return;
+            if (player.playerNetworkManager.isJumping.Value) return;
 
             // If we are not grounded, we do not want to allow a jump
             if (!player.isGrounded) return;
@@ -214,7 +214,7 @@ namespace DK
             // If we are two handing our weapon, play the two handed jump animation, otherwise play the one handed animation (TO DO)
             player.playerAnimatorManager.PlayTargetActionAnimation("Main_Jump_Start", false);
 
-            player.isJumping = true;
+            player.playerNetworkManager.isJumping.Value = true;
 
             jumpDirection = PlayerCamera.Instance.cameraObject.transform.forward * PlayerInputManager.Instance.verticalInput;
             jumpDirection += PlayerCamera.Instance.cameraObject.transform.right * PlayerInputManager.Instance.horizontalInput;

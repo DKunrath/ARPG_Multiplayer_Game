@@ -30,7 +30,9 @@ namespace DK
         [SerializeField] bool dodgeInput = false;
         [SerializeField] bool sprintInput = false;
         [SerializeField] bool jumpInput = false;
-        [SerializeField] bool manaDrainInput = false;
+        [SerializeField] bool RB_and_LMB_Input = false;
+
+        [SerializeField] bool testKey = false;
 
         private void Awake()
         {
@@ -52,6 +54,11 @@ namespace DK
             SceneManager.activeSceneChanged += OnSceneChange;
 
             Instance.enabled = false;
+
+            if (playerControls != null)
+            {
+                playerControls.Disable();
+            }
         }
 
         private void OnSceneChange(Scene oldScene, Scene newScene)
@@ -60,12 +67,22 @@ namespace DK
             if (newScene.buildIndex == WorldSaveGameManager.Instance.GetWorldSceneIndex())
             {
                 Instance.enabled = true;
+
+                if (playerControls != null)
+                {
+                    playerControls.Enable();
+                }
             }
             // Se nao, estamos no menu do jogo, por isso desativa os controles do jogador
             // Isso e para o plater nao se movimentar enquanto o jogador esta em algum menu de criacao ou inventario, etc
             else
             {
                 Instance.enabled = false;
+
+                if (playerControls != null)
+                {
+                    playerControls.Disable();
+                }
             }
         }
 
@@ -88,8 +105,10 @@ namespace DK
                 // KEYBOARD SPRINT, Holding the input, set the bool to true
                 playerControls.PlayerActions.SprintKeyboard.performed += i => sprintInput = true;
                 playerControls.PlayerActions.SprintKeyboard.canceled += i => sprintInput = false;
+                // KEYBOARD Left Mouse Button Input for weapon Attack Action
+                playerControls.PlayerActions.LMBAttackKeyboard.performed += i => RB_and_LMB_Input = true;
                 // KEYBOARD TEST LETTER K
-                playerControls.PlayerActions.ManaDrainTest.performed += i => manaDrainInput = true;
+                playerControls.PlayerActions.ManaDrainTest.performed += i => testKey = true;
 
                 #endregion
 
@@ -106,6 +125,8 @@ namespace DK
                 // CONSOLE SPRINT, Holding the input, set the bool to true
                 playerControls.PlayerActions.SprintConsole.performed += i => sprintInput = true;
                 playerControls.PlayerActions.SprintConsole.canceled += i => sprintInput = false;
+                // CONSOLE LB Input for weapon Attack Action
+                playerControls.PlayerActions.RBAttackConsole.performed += i => RB_and_LMB_Input = true;
 
                 #endregion
             }
@@ -146,7 +167,7 @@ namespace DK
             HandleDodgeInput();
             HandleSprintInput();
             HandleJumpInput();
-            HandleJumpInput();
+            HandleRBandLMBInput();
         }
 
         // Movement
@@ -231,6 +252,24 @@ namespace DK
                 // Attemp to perform jump
                 playerManager.playerLocomotionManager.AttemptToPerformJump();
             }
+        }
+
+        private void HandleRBandLMBInput()
+        { 
+            if(RB_and_LMB_Input)
+            {
+                RB_and_LMB_Input = false;
+
+                // TO DO: If we have a UI window open, return and do nothing
+
+                playerManager.playerNetworkManager.SetCharacterActionHand(true);
+
+                // TO DO: If we are two handing the weapon, use the two handed action
+
+                playerManager.playerCombatManager.PerformWeaponBasedAction(playerManager.playerInventoryManager.currentRightHandWeapon.oh_RB_and_LMB_Action, playerManager.playerInventoryManager.currentRightHandWeapon);
+            }
+
+
         }
     }
 }

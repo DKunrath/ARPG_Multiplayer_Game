@@ -6,7 +6,7 @@ namespace DK
 {
     public class WeaponManager : MonoBehaviour
     {
-        [SerializeField] MeleeWeaponDamageCollider meleeDamageCollider;
+        [SerializeField] public MeleeWeaponDamageCollider meleeDamageCollider;
 
         private void Awake()
         {

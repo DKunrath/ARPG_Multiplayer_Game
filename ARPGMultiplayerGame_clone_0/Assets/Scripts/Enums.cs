@@ -30,3 +30,10 @@ public enum WeaponModelSlot
     // Left Hip
     // Back
 }
+
+public enum AttackType
+{ 
+    LightAttack01,
+    SpellAttack01,
+    // Add other attacks, like: Heavy, spell, jumping attack, dodging attack, etc
+}

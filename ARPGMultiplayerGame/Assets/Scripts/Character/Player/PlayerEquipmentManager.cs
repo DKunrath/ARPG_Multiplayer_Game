@@ -177,5 +177,37 @@ namespace DK
         {
             //FAZER TUDO PARA A MAO ESQUERDA NAO ESQUECER
         }
+
+        // DAMAGE COLLIDERS
+
+        public void OpenDamageCollider()
+        {
+            // Open right weapon damage collider
+            if (player.playerNetworkManager.isUsingRightHand.Value)
+            {
+                rightWeaponManager.meleeDamageCollider.EnableDamageCollider();
+            }
+            // Open left weapon damage colider
+            else if(player.playerNetworkManager.isUsingLeftHand.Value)
+            {
+                leftWeaponManager.meleeDamageCollider.EnableDamageCollider();
+            }
+
+            // Play whoosh SFX
+        }
+
+        public void CloseDamageCollider()
+        {
+            // Open right weapon damage collider
+            if (player.playerNetworkManager.isUsingRightHand.Value)
+            {
+                rightWeaponManager.meleeDamageCollider.DisableDamageCollider();
+            }
+            // Open left weapon damage colider
+            else if (player.playerNetworkManager.isUsingLeftHand.Value)
+            {
+                leftWeaponManager.meleeDamageCollider.DisableDamageCollider();
+            }
+        }
     }
 }

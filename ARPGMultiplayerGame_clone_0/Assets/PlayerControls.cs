@@ -317,6 +317,24 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LMB Attack Keyboard"",
+                    ""type"": ""Button"",
+                    ""id"": ""fb45628c-b1f9-4f7a-a8d3-aa6708150f76"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RB Attack Console"",
+                    ""type"": ""Button"",
+                    ""id"": ""344c8c65-3622-47e4-9083-fa4af1800463"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -396,6 +414,28 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Sprint Keyboard"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fc9f0097-57e8-4be7-940f-4d05110cd15d"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LMB Attack Keyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3ecfbe6a-e8db-4723-9ed5-83a591e22dd9"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RB Attack Console"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -467,6 +507,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_PlayerActions_JumpConsole = m_PlayerActions.FindAction("Jump Console", throwIfNotFound: true);
         m_PlayerActions_SprintConsole = m_PlayerActions.FindAction("Sprint Console", throwIfNotFound: true);
         m_PlayerActions_ManaDrainTest = m_PlayerActions.FindAction("ManaDrainTest", throwIfNotFound: true);
+        m_PlayerActions_LMBAttackKeyboard = m_PlayerActions.FindAction("LMB Attack Keyboard", throwIfNotFound: true);
+        m_PlayerActions_RBAttackConsole = m_PlayerActions.FindAction("RB Attack Console", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_MouseLeftButton = m_UI.FindAction("MouseLeftButton", throwIfNotFound: true);
@@ -647,6 +689,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerActions_JumpConsole;
     private readonly InputAction m_PlayerActions_SprintConsole;
     private readonly InputAction m_PlayerActions_ManaDrainTest;
+    private readonly InputAction m_PlayerActions_LMBAttackKeyboard;
+    private readonly InputAction m_PlayerActions_RBAttackConsole;
     public struct PlayerActionsActions
     {
         private @PlayerControls m_Wrapper;
@@ -658,6 +702,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @JumpConsole => m_Wrapper.m_PlayerActions_JumpConsole;
         public InputAction @SprintConsole => m_Wrapper.m_PlayerActions_SprintConsole;
         public InputAction @ManaDrainTest => m_Wrapper.m_PlayerActions_ManaDrainTest;
+        public InputAction @LMBAttackKeyboard => m_Wrapper.m_PlayerActions_LMBAttackKeyboard;
+        public InputAction @RBAttackConsole => m_Wrapper.m_PlayerActions_RBAttackConsole;
         public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -688,6 +734,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @ManaDrainTest.started += instance.OnManaDrainTest;
             @ManaDrainTest.performed += instance.OnManaDrainTest;
             @ManaDrainTest.canceled += instance.OnManaDrainTest;
+            @LMBAttackKeyboard.started += instance.OnLMBAttackKeyboard;
+            @LMBAttackKeyboard.performed += instance.OnLMBAttackKeyboard;
+            @LMBAttackKeyboard.canceled += instance.OnLMBAttackKeyboard;
+            @RBAttackConsole.started += instance.OnRBAttackConsole;
+            @RBAttackConsole.performed += instance.OnRBAttackConsole;
+            @RBAttackConsole.canceled += instance.OnRBAttackConsole;
         }
 
         private void UnregisterCallbacks(IPlayerActionsActions instance)
@@ -713,6 +765,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @ManaDrainTest.started -= instance.OnManaDrainTest;
             @ManaDrainTest.performed -= instance.OnManaDrainTest;
             @ManaDrainTest.canceled -= instance.OnManaDrainTest;
+            @LMBAttackKeyboard.started -= instance.OnLMBAttackKeyboard;
+            @LMBAttackKeyboard.performed -= instance.OnLMBAttackKeyboard;
+            @LMBAttackKeyboard.canceled -= instance.OnLMBAttackKeyboard;
+            @RBAttackConsole.started -= instance.OnRBAttackConsole;
+            @RBAttackConsole.performed -= instance.OnRBAttackConsole;
+            @RBAttackConsole.canceled -= instance.OnRBAttackConsole;
         }
 
         public void RemoveCallbacks(IPlayerActionsActions instance)
@@ -803,6 +861,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnJumpConsole(InputAction.CallbackContext context);
         void OnSprintConsole(InputAction.CallbackContext context);
         void OnManaDrainTest(InputAction.CallbackContext context);
+        void OnLMBAttackKeyboard(InputAction.CallbackContext context);
+        void OnRBAttackConsole(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

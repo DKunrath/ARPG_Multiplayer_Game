@@ -51,5 +51,29 @@ namespace DK
             // Tell the server/host we played an animation, and to play that animation for everybody else present
             characterManager.characterNetworkManager.NotifyTheServerOfActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, targetAnimation, applyRootMotion);
         }
+
+        public virtual void PlayTargetAttackActionAnimation(
+            AttackType attackType,
+            string targetAnimation,
+            bool isPerformingAction,
+            bool applyRootMotion = true,
+            bool canRotate = false,
+            bool canMove = false)
+        {
+            // Keep track of last attack performed (for combos)
+            // Keep track of current attack type (Light, Heavy, Spell, ETC)
+            // Update animation set to current weapons animations
+            // Decide if our attack can be parried
+            // Tell the network our "isAttacking" flag is active (for counter damage, etc)
+            characterManager.characterCombatManager.currentAttackType = attackType;
+            characterManager.applyRootMotion = applyRootMotion;
+            characterManager.animator.CrossFade(targetAnimation, 0.2f);
+            characterManager.isPerformingAction = isPerformingAction;
+            characterManager.canRotate = canRotate;
+            characterManager.canMove = canMove;
+
+            // Tell the server/host we played an animation, and to play that animation for everybody else present
+            characterManager.characterNetworkManager.NotifyTheServerOfAttackActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, targetAnimation, applyRootMotion);
+        }
     }
 }

@@ -18,6 +18,7 @@ namespace DK
         [HideInInspector] public PlayerStatsManager playerStatsManager;
         [HideInInspector] public PlayerInventoryManager playerInventoryManager;
         [HideInInspector] public PlayerEquipmentManager playerEquipmentManager;
+        [HideInInspector] public PlayerCombatManager playerCombatManager;
 
         [Header("Mana Regeneration Stats")]
         private int manaForPlayerToRegenerate = 5; // Colocar funcao para levar em consideracao os itens utilizados pelo player
@@ -35,6 +36,7 @@ namespace DK
             playerStatsManager = GetComponent<PlayerStatsManager>();
             playerInventoryManager = GetComponent<PlayerInventoryManager>();
             playerEquipmentManager = GetComponent<PlayerEquipmentManager>();
+            playerCombatManager = GetComponent<PlayerCombatManager>();
         }
 
         protected override void Update()
@@ -85,6 +87,14 @@ namespace DK
             // Equipment 
             playerNetworkManager.currentRightHandWeaponID.OnValueChanged += playerNetworkManager.OnCurrentRightHandWeaponIDChange;
             playerNetworkManager.currentLeftHandWeaponID.OnValueChanged += playerNetworkManager.OnCurrentLeftHandWeaponIDChange;
+            playerNetworkManager.currentWeaponBeingUsed.OnValueChanged += playerNetworkManager.OnCurrentWeaponBeingUsedIDChange;
+
+            // Upon connecting, if we are the owner of this character, but we are not the server, reload our character data to this newly instantiated character
+            // We dont run this if we are the server, because since they are the host, they are already loaded in and dont need to reload their data
+            if (IsOwner && !IsServer)
+            {
+                LoadGameDataFromCurrentCharacterData(ref WorldSaveGameManager.Instance.currentCharacterData);
+            }
         }
 
         public override IEnumerator ProcessDeathEvent(bool manuallySelectDeathAnimation = false)
@@ -153,8 +163,19 @@ namespace DK
             Vector3 myPosition = new Vector3(currentCharacterData.xPosition, currentCharacterData.yPosition, currentCharacterData.zPosition);
             transform.position = myPosition;
 
-            playerNetworkManager.vitality.Value = currentCharacterData.vitality;
-            playerNetworkManager.intelligence.Value = currentCharacterData.intelligence;
+            // Se os stats nao estartarem com valores prontos para o client, os valores ficam zerados
+            // Provavelemnte por estarem sendo rodados na mesma maquina, o que pode gerar duplicidade dos arquivos
+            // Testar novamente no futuro em computadores diferentes
+            if (IsOwner && !IsServer)
+            {
+                playerNetworkManager.vitality.Value = 10;
+                playerNetworkManager.intelligence.Value = 10;
+            }
+            else
+            {
+                playerNetworkManager.vitality.Value = currentCharacterData.vitality;
+                playerNetworkManager.intelligence.Value = currentCharacterData.intelligence;
+            }
 
             playerNetworkManager.maxHealth.Value = playerStatsManager.CalculateHealthBasedOnVitalityLevel(playerNetworkManager.vitality.Value);
             playerNetworkManager.maxMana.Value = playerStatsManager.CalculateManaBasedOnIntelligenceLevel(playerNetworkManager.intelligence.Value);
@@ -212,6 +233,12 @@ namespace DK
             {
                 PlayerUIManager.Instance.playerUIHUDManager.RegenerateMana(manaForPlayerToRegenerate);
                 playerNetworkManager.currentMana.Value += manaForPlayerToRegenerate;
+
+                if (playerNetworkManager.currentMana.Value > playerNetworkManager.maxMana.Value)
+                { 
+                    playerNetworkManager.currentMana.Value = playerNetworkManager.maxMana.Value;
+                }
+
                 timeToWaitBeforeRegeneration = 0;
             }
         }
