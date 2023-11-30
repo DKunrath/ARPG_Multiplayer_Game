@@ -8,6 +8,9 @@ namespace DK
     {
         public static WorldCharacterEffectsManager Instance;
 
+        [Header("VFX")]
+        public GameObject bloodSplatterVFX;
+
         [Header("Damage")]
         public TakeDamageEffect takeDamageEffect;
 

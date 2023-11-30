@@ -175,7 +175,77 @@ namespace DK
 
         public void SwitchLeftWeapon()
         {
-            //FAZER TUDO PARA A MAO ESQUERDA NAO ESQUECER
+            if (!player.IsOwner) return;
+
+            // Animation for swapping weapons on the right hand
+            player.playerAnimatorManager.PlayTargetActionAnimation("Swap_Left_Weapon_01", false, true, true, true);
+
+            // ELDEN RINGS WEAPON SWAPPING
+            // 1. Check if we have another weapon besides our main weapon, if we do, NEVER swap to unarmed, rotate between weapon 1 and 2
+            // 2. If we dont, swap to unarmed, then SKIP the other empty slot and swap back. Do not process both empty slots before returning to main weapon
+
+            WeaponItem selectedWeapon = null;
+
+            // Disable two handing if we are two handing
+
+            // Add one to our index to switch to the next potential weapon
+            player.playerInventoryManager.leftHandWeaponIndex += 1;
+
+            // If our index is out of bounds, reset it to position #1 (0)
+            if (player.playerInventoryManager.leftHandWeaponIndex < 0 || player.playerInventoryManager.leftHandWeaponIndex > 2)
+            {
+                player.playerInventoryManager.leftHandWeaponIndex = 0;
+
+                // We check if we are holding more than one weapon
+                float weaponCount = 0;
+                WeaponItem firstWeapon = null;
+                int firstWeaponIndex = 0;
+
+                for (int i = 0; i < player.playerInventoryManager.weaponsInLeftHandSlots.Length; i++)
+                {
+                    if (player.playerInventoryManager.weaponsInLeftHandSlots[i].itemID != WorldItemDatabase.Instance.unarmedWeapon.itemID)
+                    {
+                        weaponCount += 1;
+
+                        if (firstWeapon == null)
+                        {
+                            firstWeapon = player.playerInventoryManager.weaponsInLeftHandSlots[i];
+                            firstWeaponIndex = i;
+                        }
+                    }
+                }
+
+                if (weaponCount <= 1)
+                {
+                    player.playerInventoryManager.leftHandWeaponIndex = -1;
+                    selectedWeapon = WorldItemDatabase.Instance.unarmedWeapon;
+                    player.playerNetworkManager.currentLeftHandWeaponID.Value = selectedWeapon.itemID;
+                }
+                else
+                {
+                    player.playerInventoryManager.leftHandWeaponIndex = firstWeaponIndex;
+                    player.playerNetworkManager.currentLeftHandWeaponID.Value = firstWeapon.itemID;
+                }
+
+                return;
+            }
+
+            foreach (WeaponItem weapon in player.playerInventoryManager.weaponsInLeftHandSlots)
+            {
+                // Check to see if this weapon is not the "UNARMED" weapon
+                if (player.playerInventoryManager.weaponsInLeftHandSlots[player.playerInventoryManager.leftHandWeaponIndex].itemID != WorldItemDatabase.Instance.unarmedWeapon.itemID)
+                {
+                    selectedWeapon = player.playerInventoryManager.weaponsInLeftHandSlots[player.playerInventoryManager.leftHandWeaponIndex];
+                    // Assign the network weapon id so it switches for all connected clients
+                    player.playerNetworkManager.currentLeftHandWeaponID.Value = player.playerInventoryManager.weaponsInLeftHandSlots[player.playerInventoryManager.leftHandWeaponIndex].itemID;
+                    return;
+                }
+            }
+
+            if (selectedWeapon == null && player.playerInventoryManager.leftHandWeaponIndex <= 2)
+            {
+                SwitchLeftWeapon();
+            }
         }
 
         // DAMAGE COLLIDERS

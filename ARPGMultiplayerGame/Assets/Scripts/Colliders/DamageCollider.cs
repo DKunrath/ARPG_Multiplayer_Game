@@ -7,7 +7,7 @@ namespace DK
     public class DamageCollider : MonoBehaviour
     {
         [Header("Collider")]
-        protected Collider damageCollider;
+        [SerializeField] protected Collider damageCollider;
 
         [Header("Damage")]
         public float physicalDamage = 0; // (In the future will besplit into "Standard", "Strike", "Slash" and "Pierce")
@@ -19,14 +19,20 @@ namespace DK
         public float poisonDamage = 0;
         public float holyDamage = 0;
         public float darkMagicDamage = 0;
+        public float poiseDamage = 0;
 
         [Header("Contact Point")]
-        private Vector3 contactPoint;
+        public Vector3 contactPoint;
 
         [Header("Characters Damaged")]
         protected List<CharacterManager> charactersDamaged = new List<CharacterManager>();
 
-        private void OnTriggerEnter(Collider other)
+        protected virtual void Awake()
+        {
+            
+        }
+
+        protected virtual void OnTriggerEnter(Collider other)
         {
             CharacterManager damageTarget = other.GetComponentInParent<CharacterManager>();
 
@@ -64,6 +70,7 @@ namespace DK
             damageEffect.poisonDamage = poisonDamage;
             damageEffect.holyDamage = holyDamage;
             damageEffect.darkMagicDamage = darkMagicDamage;
+            damageEffect.poiseDamage = poiseDamage;
             damageEffect.contactPoint = contactPoint;
 
             damageTarget.characterEffectsManager.ProcessInstantEffect(damageEffect);

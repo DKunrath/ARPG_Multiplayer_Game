@@ -47952,7 +47952,7 @@ Transform:
   m_GameObject: {fileID: 6202690760084295820}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -48020,6 +48020,7 @@ MonoBehaviour:
   characterEffectsManager: {fileID: 0}
   characterAnimatorManager: {fileID: 0}
   characterCombatManager: {fileID: 0}
+  characterSoundFXManager: {fileID: 0}
   isPerformingAction: 0
   isGrounded: 1
   applyRootMotion: 0
@@ -48027,6 +48028,7 @@ MonoBehaviour:
   canMove: 1
   respawnCharacter: 0
   switchRightWeapon: 0
+  switchLeftWeapon: 0
   playerLocomotionManager: {fileID: -7469169022204187951}
   playerAnimatorManager: {fileID: 7784948816790287109}
   playerNetworkManager: {fileID: 0}
@@ -48126,11 +48128,11 @@ MonoBehaviour:
     m_InternalValue: 10
   currentHealth:
     m_InternalValue: 0
-  currentMana:
+  currentSoulPower:
     m_InternalValue: 0
   maxHealth:
     m_InternalValue: 0
-  maxMana:
+  maxSoulPower:
     m_InternalValue: 0
   characterName:
     m_InternalValue:
@@ -48223,6 +48225,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af778d915e8d3414ab35db81ae14cd62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lastDamageAnimationPlayed: 
+  hit_Forward_Medium_01: Hit_Forward_Medium_01
+  hit_Forward_Medium_02: Hit_Forward_Medium_02
+  hit_Backward_Medium_01: Hit_Backward_Medium_01
+  hit_Backward_Medium_02: Hit_Backward_Medium_02
+  hit_Left_Medium_01: Hit_Left_Medium_01
+  hit_Left_Medium_02: Hit_Left_Medium_02
+  hit_Right_Medium_01: Hit_Right_Medium_01
+  hit_Right_Medium_02: Hit_Right_Medium_02
+  forward_Medium_Damage: []
+  backward_Medium_Damage: []
+  left_Medium_Damage: []
+  right_Medium_Damage: []
 --- !u!114 &-306017208907169755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48257,9 +48272,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 380a47191d312954fa69b743f138cdce, type: 2}
   rightHandWeaponIndex: 0
   weaponsInLeftHandSlots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 6804db802b5f04f4b8020c71a512fe43, type: 2}
+  - {fileID: 11400000, guid: 87d570f99b9a5334cb3bb365d95e7167, type: 2}
+  - {fileID: 11400000, guid: 380a47191d312954fa69b743f138cdce, type: 2}
   leftHandWeaponIndex: 0
 --- !u!114 &5200185951566362041
 MonoBehaviour:
@@ -48305,6 +48320,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95b684272bc1ab14691980c872fc9a03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bloodSplatterVFX: {fileID: 0}
   effectToTest: {fileID: 11400000, guid: c142f759f0744c6498b7fd8a82c1be18, type: 2}
   processEffect: 0
 --- !u!114 &-2945921805807884574

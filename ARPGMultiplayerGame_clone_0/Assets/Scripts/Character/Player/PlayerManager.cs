@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Unity.Netcode;
 
 namespace DK
 {
@@ -11,6 +12,7 @@ namespace DK
         [Header("Debug Menu")]
         [SerializeField] bool respawnCharacter = false;
         [SerializeField] bool switchRightWeapon = false;
+        [SerializeField] bool switchLeftWeapon = false;
 
         [HideInInspector] public PlayerLocomotionManager playerLocomotionManager;
         [HideInInspector] public PlayerAnimatorManager playerAnimatorManager;
@@ -67,6 +69,8 @@ namespace DK
         {
             base.OnNetworkSpawn();
 
+            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnectedCallback;
+
             // If this is the player object owned by this client
             if (IsOwner)
             {
@@ -76,7 +80,7 @@ namespace DK
 
                 // Update the total amount of health or mana when the stat linked to either changes
                 playerNetworkManager.vitality.OnValueChanged += playerNetworkManager.SetNewMaxHealthValue;
-                playerNetworkManager.intelligence.OnValueChanged += playerNetworkManager.SetNewMaxManaValue;
+                playerNetworkManager.intelligence.OnValueChanged += playerNetworkManager.SetNewMaxSoulPowerValue;
             }
 
             // All the things done here, counts to every character in the game
@@ -94,6 +98,25 @@ namespace DK
             if (IsOwner && !IsServer)
             {
                 LoadGameDataFromCurrentCharacterData(ref WorldSaveGameManager.Instance.currentCharacterData);
+            }
+        }
+
+        private void OnClientConnectedCallback(ulong clientID)
+        {
+            // Add this player to the players list on the server
+            WorldGameSessionManager.Instance.AddPlayerToActivePlayersList(this);
+
+            // If we are the server, we are the host, so we dont need to load players to sync them
+            // You only need to load other players gear to sync it if you join a game thats already been active without you being present
+            if (!IsServer && IsOwner)
+            {
+                foreach (var player in WorldGameSessionManager.Instance.players)
+                {
+                    if (player != this)
+                    {
+                        player.LoadOtherPlayerCharacterWhenJoiningServer();
+                    }
+                }
             }
         }
 
@@ -116,7 +139,7 @@ namespace DK
             if (IsOwner)
             { 
                 playerNetworkManager.currentHealth.Value = playerNetworkManager.maxHealth.Value;
-                playerNetworkManager.currentMana.Value = playerNetworkManager.maxMana.Value;
+                playerNetworkManager.currentSoulPower.Value = playerNetworkManager.maxSoulPower.Value;
                 // Restore everything needed
 
                 // Play rebirth effects
@@ -135,7 +158,7 @@ namespace DK
             currentCharacterData.zPosition = transform.position.z;
 
             currentCharacterData.currentHealth = playerNetworkManager.currentHealth.Value;
-            currentCharacterData.currentMana = playerNetworkManager.currentMana.Value;
+            currentCharacterData.currentSoulPower = playerNetworkManager.currentSoulPower.Value;
 
             currentCharacterData.vitality = playerNetworkManager.vitality.Value;
             currentCharacterData.intelligence = playerNetworkManager.intelligence.Value;
@@ -151,7 +174,7 @@ namespace DK
             currentCharacterData.zPosition = transform.position.z;
 
             currentCharacterData.currentHealth = playerNetworkManager.currentHealth.Value;
-            currentCharacterData.currentMana = playerNetworkManager.currentMana.Value;
+            currentCharacterData.currentSoulPower = playerNetworkManager.currentSoulPower.Value;
 
             currentCharacterData.vitality = playerNetworkManager.vitality.Value;
             currentCharacterData.intelligence = playerNetworkManager.intelligence.Value;
@@ -178,25 +201,34 @@ namespace DK
             }
 
             playerNetworkManager.maxHealth.Value = playerStatsManager.CalculateHealthBasedOnVitalityLevel(playerNetworkManager.vitality.Value);
-            playerNetworkManager.maxMana.Value = playerStatsManager.CalculateManaBasedOnIntelligenceLevel(playerNetworkManager.intelligence.Value);
+            playerNetworkManager.maxSoulPower.Value = playerStatsManager.CalculateSoulPowerBasedOnIntelligenceLevel(playerNetworkManager.intelligence.Value);
 
-            if (currentCharacterData.currentHealth == 0 && currentCharacterData.currentMana == 0)
+            if (currentCharacterData.currentHealth == 0 && currentCharacterData.currentSoulPower == 0)
             {
                 playerNetworkManager.currentHealth.Value = playerNetworkManager.maxHealth.Value;
-                playerNetworkManager.currentMana.Value = playerNetworkManager.maxMana.Value;
+                playerNetworkManager.currentSoulPower.Value = playerNetworkManager.maxSoulPower.Value;
             }
             else
             {
                 playerNetworkManager.currentHealth.Value = currentCharacterData.currentHealth;
-                playerNetworkManager.currentMana.Value = currentCharacterData.currentMana;
+                playerNetworkManager.currentSoulPower.Value = currentCharacterData.currentSoulPower;
             }
 
             PlayerUIManager.Instance.playerUIHUDManager.SetMaxHealthValue(playerNetworkManager.maxHealth.Value);
-            PlayerUIManager.Instance.playerUIHUDManager.SetMaxManaValue(playerNetworkManager.maxMana.Value);
+            PlayerUIManager.Instance.playerUIHUDManager.SetMaxManaValue(playerNetworkManager.maxSoulPower.Value);
 
             PlayerUIManager.Instance.playerUIHUDManager.SetNewHealthValue(0, Mathf.RoundToInt(playerNetworkManager.currentHealth.Value));
-            PlayerUIManager.Instance.playerUIHUDManager.SetNewManaValue(0, Mathf.RoundToInt(playerNetworkManager.currentMana.Value));
+            PlayerUIManager.Instance.playerUIHUDManager.SetNewManaValue(0, Mathf.RoundToInt(playerNetworkManager.currentSoulPower.Value));
             
+        }
+
+        public void LoadOtherPlayerCharacterWhenJoiningServer()
+        {
+            // Sync Weapons
+            playerNetworkManager.OnCurrentRightHandWeaponIDChange(0, playerNetworkManager.currentRightHandWeaponID.Value);
+            playerNetworkManager.OnCurrentLeftHandWeaponIDChange(0, playerNetworkManager.currentLeftHandWeaponID.Value);
+
+            // Sync Armor
         }
 
         // DEBUG DELETE LATER
@@ -214,6 +246,12 @@ namespace DK
                 switchRightWeapon = false;
                 playerEquipmentManager.SwitchRightWeapon();
             }
+
+            if (switchLeftWeapon)
+            {
+                switchLeftWeapon = false;
+                playerEquipmentManager.SwitchLeftWeapon();
+            }
         }
 
         #region Mana Drain & Regeneration
@@ -225,18 +263,18 @@ namespace DK
 
             if (isPerformingAction) return;
 
-            if (playerNetworkManager.currentMana.Value == playerNetworkManager.maxMana.Value) return;
+            if (playerNetworkManager.currentSoulPower.Value == playerNetworkManager.maxSoulPower.Value) return;
 
             timeToWaitBeforeRegeneration += Time.deltaTime;
             
-            if (playerNetworkManager.currentMana.Value < playerNetworkManager.maxMana.Value && timeToWaitBeforeRegeneration > manaRegenerationTimerDelay)
+            if (playerNetworkManager.currentSoulPower.Value < playerNetworkManager.maxSoulPower.Value && timeToWaitBeforeRegeneration > manaRegenerationTimerDelay)
             {
                 PlayerUIManager.Instance.playerUIHUDManager.RegenerateMana(manaForPlayerToRegenerate);
-                playerNetworkManager.currentMana.Value += manaForPlayerToRegenerate;
+                playerNetworkManager.currentSoulPower.Value += manaForPlayerToRegenerate;
 
-                if (playerNetworkManager.currentMana.Value > playerNetworkManager.maxMana.Value)
+                if (playerNetworkManager.currentSoulPower.Value > playerNetworkManager.maxSoulPower.Value)
                 { 
-                    playerNetworkManager.currentMana.Value = playerNetworkManager.maxMana.Value;
+                    playerNetworkManager.currentSoulPower.Value = playerNetworkManager.maxSoulPower.Value;
                 }
 
                 timeToWaitBeforeRegeneration = 0;

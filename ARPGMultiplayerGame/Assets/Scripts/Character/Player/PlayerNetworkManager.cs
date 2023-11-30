@@ -47,9 +47,9 @@ namespace DK
             //currentHealth.Value = maxHealth.Value;
         }
 
-        public void SetNewMaxManaValue(int oldIntelligenceValue, int newIntelligenceValue)
+        public void SetNewMaxSoulPowerValue(int oldIntelligenceValue, int newIntelligenceValue)
         {
-            maxMana.Value = playerManager.playerStatsManager.CalculateManaBasedOnIntelligenceLevel(newIntelligenceValue);
+            maxSoulPower.Value = playerManager.playerStatsManager.CalculateSoulPowerBasedOnIntelligenceLevel(newIntelligenceValue);
             //currentMana.Value = maxMana.Value;
         }
 

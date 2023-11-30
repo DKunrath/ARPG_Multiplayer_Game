@@ -9,6 +9,9 @@ namespace DK
     {
         public static WorldSoundFXManager Instance;
 
+        [Header("Damage Sounds")]
+        public AudioClip[] physicalDamageSFX;
+
         [Header("Action Sounds")]
         public AudioClip rollSFX;
 
@@ -27,6 +30,13 @@ namespace DK
         private void Start()
         {
             DontDestroyOnLoad(gameObject);
+        }
+
+        public AudioClip ChooseRandomSFXFromArray(AudioClip[] arrayOfSounds)
+        {
+            int index = Random.Range(0, arrayOfSounds.Length);
+
+            return arrayOfSounds[index];
         }
     }
 }

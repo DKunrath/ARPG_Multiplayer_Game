@@ -26,6 +26,9 @@ namespace DK
             meleeDamageCollider.poisonDamage = weapon.poisonDamage;
             meleeDamageCollider.holyDamage = weapon.holyDamage;
             meleeDamageCollider.darkMagicDamage = weapon.darkMagicDamage;
+
+            meleeDamageCollider.light_Attack_01_Modifier = weapon.light_Attack_01_Modifier;
+            meleeDamageCollider.spell_Attack_01_Modifier = weapon.spell_Attack_01_Modifier;
         }
     }
 }

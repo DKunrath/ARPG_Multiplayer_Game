@@ -31,26 +31,27 @@ namespace DK
 
         }
 
-        public void DrainManaBasedOnAttack()
+        public void DrainSoulPowerBasedOnAttack()
         {
             if (!playerManager.IsOwner) return;
 
             if (currentWeaponBeingUsed == null) return;
 
-            float manaDeducted = 0;
+            float soulPower = 0;
 
             switch (currentAttackType)
             {
                 case AttackType.LightAttack01:
+                    soulPower = currentWeaponBeingUsed.baseSoulPowerCost * currentWeaponBeingUsed.lightAttackSoulPowerCostMultiplier;
                     break;
                 case AttackType.SpellAttack01:
-                    manaDeducted = currentWeaponBeingUsed.baseManaCost * currentWeaponBeingUsed.spellAttackManaCostMultiplier;
+                    soulPower = currentWeaponBeingUsed.baseSoulPowerCost * currentWeaponBeingUsed.spellAttackSoulPowerCostMultiplier;
                     break;
                 default:
                     break;
             }
 
-            playerManager.playerNetworkManager.currentMana.Value -= Mathf.RoundToInt(manaDeducted);
+            playerManager.playerNetworkManager.currentSoulPower.Value -= Mathf.RoundToInt(soulPower);
         }
     }
 }

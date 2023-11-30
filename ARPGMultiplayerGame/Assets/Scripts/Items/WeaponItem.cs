@@ -41,9 +41,13 @@ namespace DK
         // Heavy Attack Modifier
         // Critical Damage Modifier etc
 
-        [Header("Mana Cost Modifiers")]
-        public int baseManaCost = 1;
-        public float spellAttackManaCostMultiplier = 0.9f;
+        [Header("Light Attack Cost Modifiers")]
+        public int baseLightAttackCost = 1;
+        public float lightAttackSoulPowerCostMultiplier = 0.9f;
+
+        [Header("Soul Power Cost Modifiers")]
+        public int baseSoulPowerCost = 1;
+        public float spellAttackSoulPowerCostMultiplier = 0.9f;
 
         // Item based actions (RB, RT, LB, LT) in Console
         // Item based actions (RightMouseButton (RMB), ALT+RMB, LeftMouseButton (LMB), ALT+LMB) in keyboard & mouse

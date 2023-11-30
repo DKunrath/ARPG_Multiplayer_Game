@@ -30,15 +30,15 @@ namespace DK
             return Mathf.RoundToInt(health);
         }
 
-        public int CalculateManaBasedOnIntelligenceLevel(int intelligence)
+        public int CalculateSoulPowerBasedOnIntelligenceLevel(int intelligence)
         {
-            float mana = 0;
+            float soulPower = 0;
 
             // Create an equation for how I want the mana to be calculated
 
-            mana = intelligence * 10;
+            soulPower = intelligence * 10;
 
-            return Mathf.RoundToInt(mana);
+            return Mathf.RoundToInt(soulPower);
         }
     }
 }

@@ -26,17 +26,17 @@ namespace DK
 
             if (characterManager.isPerformingAction) return;
 
-            if (characterManager.characterNetworkManager.currentMana.Value <= 0)
+            if (characterManager.characterNetworkManager.currentSoulPower.Value <= 0)
             {
-                characterManager.characterNetworkManager.currentMana.Value = 0;
+                characterManager.characterNetworkManager.currentSoulPower.Value = 0;
             }
 
-            if (characterManager.characterNetworkManager.currentMana.Value == 0) return;
+            if (characterManager.characterNetworkManager.currentSoulPower.Value == 0) return;
 
-            if (manaDamage > characterManager.characterNetworkManager.currentMana.Value) return;
+            if (manaDamage > characterManager.characterNetworkManager.currentSoulPower.Value) return;
 
             PlayerUIManager.Instance.playerUIHUDManager.RemoveMana(manaDamage);
-            characterManager.characterNetworkManager.currentMana.Value -= manaDamage;
+            characterManager.characterNetworkManager.currentSoulPower.Value -= manaDamage;
         }
     }
 }

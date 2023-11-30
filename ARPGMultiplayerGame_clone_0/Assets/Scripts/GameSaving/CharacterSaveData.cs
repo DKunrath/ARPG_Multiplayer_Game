@@ -26,7 +26,7 @@ namespace DK
 
         [Header("Resources")]
         public float currentHealth;
-        public float currentMana;
+        public float currentSoulPower;
 
         [Header("Stats")]
         public int vitality = 10;
