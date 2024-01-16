@@ -328,9 +328,45 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""RMB Attack Keyboard"",
+                    ""type"": ""Button"",
+                    ""id"": ""765d471b-afb9-4e0d-aa4b-85bc4950bbbd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""RB Attack Console"",
                     ""type"": ""Button"",
                     ""id"": ""344c8c65-3622-47e4-9083-fa4af1800463"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RT Heavy Attack Console"",
+                    ""type"": ""Button"",
+                    ""id"": ""9cd4b97c-c131-49e5-9e89-fd3066b30efa"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Lock On Keyboard"",
+                    ""type"": ""Button"",
+                    ""id"": ""3f370d4c-8c11-4a43-a74c-800d592c3f73"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Lock On Console"",
+                    ""type"": ""Button"",
+                    ""id"": ""7c3873f5-c8ab-45a1-98bf-04d00c960f36"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -436,6 +472,50 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""RB Attack Console"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f75f8c09-5682-4b40-afda-1f737a43915e"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Lock On Keyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""83928a19-8b28-407c-b0c2-e9be34a0dc96"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Lock On Console"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a94c67bb-c970-4d55-ba39-04404e1ffe8a"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RT Heavy Attack Console"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a57cadd0-553f-4fdb-9370-c5a88665b8b6"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RMB Attack Keyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -508,7 +588,11 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_PlayerActions_SprintConsole = m_PlayerActions.FindAction("Sprint Console", throwIfNotFound: true);
         m_PlayerActions_ManaDrainTest = m_PlayerActions.FindAction("ManaDrainTest", throwIfNotFound: true);
         m_PlayerActions_LMBAttackKeyboard = m_PlayerActions.FindAction("LMB Attack Keyboard", throwIfNotFound: true);
+        m_PlayerActions_RMBAttackKeyboard = m_PlayerActions.FindAction("RMB Attack Keyboard", throwIfNotFound: true);
         m_PlayerActions_RBAttackConsole = m_PlayerActions.FindAction("RB Attack Console", throwIfNotFound: true);
+        m_PlayerActions_RTHeavyAttackConsole = m_PlayerActions.FindAction("RT Heavy Attack Console", throwIfNotFound: true);
+        m_PlayerActions_LockOnKeyboard = m_PlayerActions.FindAction("Lock On Keyboard", throwIfNotFound: true);
+        m_PlayerActions_LockOnConsole = m_PlayerActions.FindAction("Lock On Console", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_MouseLeftButton = m_UI.FindAction("MouseLeftButton", throwIfNotFound: true);
@@ -690,7 +774,11 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerActions_SprintConsole;
     private readonly InputAction m_PlayerActions_ManaDrainTest;
     private readonly InputAction m_PlayerActions_LMBAttackKeyboard;
+    private readonly InputAction m_PlayerActions_RMBAttackKeyboard;
     private readonly InputAction m_PlayerActions_RBAttackConsole;
+    private readonly InputAction m_PlayerActions_RTHeavyAttackConsole;
+    private readonly InputAction m_PlayerActions_LockOnKeyboard;
+    private readonly InputAction m_PlayerActions_LockOnConsole;
     public struct PlayerActionsActions
     {
         private @PlayerControls m_Wrapper;
@@ -703,7 +791,11 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @SprintConsole => m_Wrapper.m_PlayerActions_SprintConsole;
         public InputAction @ManaDrainTest => m_Wrapper.m_PlayerActions_ManaDrainTest;
         public InputAction @LMBAttackKeyboard => m_Wrapper.m_PlayerActions_LMBAttackKeyboard;
+        public InputAction @RMBAttackKeyboard => m_Wrapper.m_PlayerActions_RMBAttackKeyboard;
         public InputAction @RBAttackConsole => m_Wrapper.m_PlayerActions_RBAttackConsole;
+        public InputAction @RTHeavyAttackConsole => m_Wrapper.m_PlayerActions_RTHeavyAttackConsole;
+        public InputAction @LockOnKeyboard => m_Wrapper.m_PlayerActions_LockOnKeyboard;
+        public InputAction @LockOnConsole => m_Wrapper.m_PlayerActions_LockOnConsole;
         public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -737,9 +829,21 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @LMBAttackKeyboard.started += instance.OnLMBAttackKeyboard;
             @LMBAttackKeyboard.performed += instance.OnLMBAttackKeyboard;
             @LMBAttackKeyboard.canceled += instance.OnLMBAttackKeyboard;
+            @RMBAttackKeyboard.started += instance.OnRMBAttackKeyboard;
+            @RMBAttackKeyboard.performed += instance.OnRMBAttackKeyboard;
+            @RMBAttackKeyboard.canceled += instance.OnRMBAttackKeyboard;
             @RBAttackConsole.started += instance.OnRBAttackConsole;
             @RBAttackConsole.performed += instance.OnRBAttackConsole;
             @RBAttackConsole.canceled += instance.OnRBAttackConsole;
+            @RTHeavyAttackConsole.started += instance.OnRTHeavyAttackConsole;
+            @RTHeavyAttackConsole.performed += instance.OnRTHeavyAttackConsole;
+            @RTHeavyAttackConsole.canceled += instance.OnRTHeavyAttackConsole;
+            @LockOnKeyboard.started += instance.OnLockOnKeyboard;
+            @LockOnKeyboard.performed += instance.OnLockOnKeyboard;
+            @LockOnKeyboard.canceled += instance.OnLockOnKeyboard;
+            @LockOnConsole.started += instance.OnLockOnConsole;
+            @LockOnConsole.performed += instance.OnLockOnConsole;
+            @LockOnConsole.canceled += instance.OnLockOnConsole;
         }
 
         private void UnregisterCallbacks(IPlayerActionsActions instance)
@@ -768,9 +872,21 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @LMBAttackKeyboard.started -= instance.OnLMBAttackKeyboard;
             @LMBAttackKeyboard.performed -= instance.OnLMBAttackKeyboard;
             @LMBAttackKeyboard.canceled -= instance.OnLMBAttackKeyboard;
+            @RMBAttackKeyboard.started -= instance.OnRMBAttackKeyboard;
+            @RMBAttackKeyboard.performed -= instance.OnRMBAttackKeyboard;
+            @RMBAttackKeyboard.canceled -= instance.OnRMBAttackKeyboard;
             @RBAttackConsole.started -= instance.OnRBAttackConsole;
             @RBAttackConsole.performed -= instance.OnRBAttackConsole;
             @RBAttackConsole.canceled -= instance.OnRBAttackConsole;
+            @RTHeavyAttackConsole.started -= instance.OnRTHeavyAttackConsole;
+            @RTHeavyAttackConsole.performed -= instance.OnRTHeavyAttackConsole;
+            @RTHeavyAttackConsole.canceled -= instance.OnRTHeavyAttackConsole;
+            @LockOnKeyboard.started -= instance.OnLockOnKeyboard;
+            @LockOnKeyboard.performed -= instance.OnLockOnKeyboard;
+            @LockOnKeyboard.canceled -= instance.OnLockOnKeyboard;
+            @LockOnConsole.started -= instance.OnLockOnConsole;
+            @LockOnConsole.performed -= instance.OnLockOnConsole;
+            @LockOnConsole.canceled -= instance.OnLockOnConsole;
         }
 
         public void RemoveCallbacks(IPlayerActionsActions instance)
@@ -862,7 +978,11 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnSprintConsole(InputAction.CallbackContext context);
         void OnManaDrainTest(InputAction.CallbackContext context);
         void OnLMBAttackKeyboard(InputAction.CallbackContext context);
+        void OnRMBAttackKeyboard(InputAction.CallbackContext context);
         void OnRBAttackConsole(InputAction.CallbackContext context);
+        void OnRTHeavyAttackConsole(InputAction.CallbackContext context);
+        void OnLockOnKeyboard(InputAction.CallbackContext context);
+        void OnLockOnConsole(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

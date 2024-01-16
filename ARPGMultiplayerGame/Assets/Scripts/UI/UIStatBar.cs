@@ -20,6 +20,16 @@ namespace DK
             slider.value = maxValue;
         }
 
+        public float GetStat()
+        { 
+            return slider.value;
+        }
+
+        public float GetMaxStat()
+        {
+            return slider.maxValue;
+        }
+
         public virtual void RegenerateMana(float manaToRegeneratePerSecond)
         {
             slider.value += manaToRegeneratePerSecond;

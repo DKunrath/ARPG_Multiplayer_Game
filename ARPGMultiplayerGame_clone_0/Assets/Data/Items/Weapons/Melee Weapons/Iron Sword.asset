@@ -32,5 +32,14 @@ MonoBehaviour:
   holyDamage: 0
   darkMagicDamage: 0
   poiseDamage: 25
+  light_Attack_01_Modifier: 1.1
+  spell_Attack_01_Modifier: 1.1
+  heavy_Attack_01_Modifier: 1.5
+  baseLightAttackCost: 15
+  lightAttackSoulPowerCostMultiplier: 0.9
+  baseSoulPowerCost: 15
+  spellAttackSoulPowerCostMultiplier: 0.9
   oh_RB_and_LMB_Action: {fileID: 11400000, guid: dc8512560a00fbb4295317af3321cd02,
+    type: 2}
+  oh_RT_and_RMB_Action: {fileID: 11400000, guid: b0a5e7888f5872d499533f1a898691e7,
     type: 2}

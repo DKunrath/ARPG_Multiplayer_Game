@@ -22,11 +22,6 @@ namespace DK
         [HideInInspector] public PlayerEquipmentManager playerEquipmentManager;
         [HideInInspector] public PlayerCombatManager playerCombatManager;
 
-        [Header("Mana Regeneration Stats")]
-        private int manaForPlayerToRegenerate = 5; // Colocar funcao para levar em consideracao os itens utilizados pelo player
-        private float manaRegenerationTimerDelay = 5f; // Tempo que deve ser esperado antes de regenerar uma porcentagem da mana
-        float timeToWaitBeforeRegeneration = 0f;
-
         protected override void Awake()
         {
             base.Awake();
@@ -49,9 +44,6 @@ namespace DK
 
             // Lida com todos os movimentos do player
             playerLocomotionManager.HandleAllMovement();
-            // Regen Mana
-            HandleManaRegeneration();
-            //playerStatsManager.RegenerateMana();
 
             DebugMenu();
         }
@@ -87,6 +79,11 @@ namespace DK
 
             // Stats
             playerNetworkManager.currentHealth.OnValueChanged += playerNetworkManager.CheckHP;
+            //playerNetworkManager.currentSoulPower.OnValueChanged += playerNetworkManager.CheckSP;
+
+            // Lock on
+            playerNetworkManager.isLockedOn.OnValueChanged += playerNetworkManager.OnIsLockedOnChanged;
+            playerNetworkManager.currentTargetNetworkObjectID.OnValueChanged += playerNetworkManager.OnLockOnTargetIDChange;
 
             // Equipment 
             playerNetworkManager.currentRightHandWeaponID.OnValueChanged += playerNetworkManager.OnCurrentRightHandWeaponIDChange;
@@ -99,6 +96,35 @@ namespace DK
             {
                 LoadGameDataFromCurrentCharacterData(ref WorldSaveGameManager.Instance.currentCharacterData);
             }
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+
+            NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnectedCallback;
+
+            // If this is the player object owned by this client
+            if (IsOwner)
+            {
+                // Update the total amount of health or mana when the stat linked to either changes
+                playerNetworkManager.vitality.OnValueChanged -= playerNetworkManager.SetNewMaxHealthValue;
+                playerNetworkManager.intelligence.OnValueChanged -= playerNetworkManager.SetNewMaxSoulPowerValue;
+            }
+
+            // All the things done here, counts to every character in the game
+
+            // Stats
+            playerNetworkManager.currentHealth.OnValueChanged -= playerNetworkManager.CheckHP;
+
+            // Lock on
+            playerNetworkManager.isLockedOn.OnValueChanged -= playerNetworkManager.OnIsLockedOnChanged;
+            playerNetworkManager.currentTargetNetworkObjectID.OnValueChanged -= playerNetworkManager.OnLockOnTargetIDChange;
+
+            // Equipment 
+            playerNetworkManager.currentRightHandWeaponID.OnValueChanged -= playerNetworkManager.OnCurrentRightHandWeaponIDChange;
+            playerNetworkManager.currentLeftHandWeaponID.OnValueChanged -= playerNetworkManager.OnCurrentLeftHandWeaponIDChange;
+            playerNetworkManager.currentWeaponBeingUsed.OnValueChanged -= playerNetworkManager.OnCurrentWeaponBeingUsedIDChange;
         }
 
         private void OnClientConnectedCallback(ulong clientID)
@@ -215,10 +241,10 @@ namespace DK
             }
 
             PlayerUIManager.Instance.playerUIHUDManager.SetMaxHealthValue(playerNetworkManager.maxHealth.Value);
-            PlayerUIManager.Instance.playerUIHUDManager.SetMaxManaValue(playerNetworkManager.maxSoulPower.Value);
+            PlayerUIManager.Instance.playerUIHUDManager.SetMaxSoulPowerValue(playerNetworkManager.maxSoulPower.Value);
 
             PlayerUIManager.Instance.playerUIHUDManager.SetNewHealthValue(0, Mathf.RoundToInt(playerNetworkManager.currentHealth.Value));
-            PlayerUIManager.Instance.playerUIHUDManager.SetNewManaValue(0, Mathf.RoundToInt(playerNetworkManager.currentSoulPower.Value));
+            PlayerUIManager.Instance.playerUIHUDManager.SetNewSoulPowerValue(0, Mathf.RoundToInt(playerNetworkManager.currentSoulPower.Value));
             
         }
 
@@ -229,6 +255,12 @@ namespace DK
             playerNetworkManager.OnCurrentLeftHandWeaponIDChange(0, playerNetworkManager.currentLeftHandWeaponID.Value);
 
             // Sync Armor
+
+            // Lock on
+            if (playerNetworkManager.isLockedOn.Value)
+            {
+                playerNetworkManager.OnLockOnTargetIDChange(0, playerNetworkManager.currentTargetNetworkObjectID.Value);
+            }
         }
 
         // DEBUG DELETE LATER
@@ -254,53 +286,5 @@ namespace DK
             }
         }
 
-        #region Mana Drain & Regeneration
-
-        public void HandleManaRegeneration()
-        {
-            // Only owners can edit their network variable
-            if (!IsOwner) return;
-
-            if (isPerformingAction) return;
-
-            if (playerNetworkManager.currentSoulPower.Value == playerNetworkManager.maxSoulPower.Value) return;
-
-            timeToWaitBeforeRegeneration += Time.deltaTime;
-            
-            if (playerNetworkManager.currentSoulPower.Value < playerNetworkManager.maxSoulPower.Value && timeToWaitBeforeRegeneration > manaRegenerationTimerDelay)
-            {
-                PlayerUIManager.Instance.playerUIHUDManager.RegenerateMana(manaForPlayerToRegenerate);
-                playerNetworkManager.currentSoulPower.Value += manaForPlayerToRegenerate;
-
-                if (playerNetworkManager.currentSoulPower.Value > playerNetworkManager.maxSoulPower.Value)
-                { 
-                    playerNetworkManager.currentSoulPower.Value = playerNetworkManager.maxSoulPower.Value;
-                }
-
-                timeToWaitBeforeRegeneration = 0;
-            }
-        }
-
-        public int GetManaForPlayerToRegenerate()
-        {
-            return manaForPlayerToRegenerate;
-        }
-
-        public void SetManaForPlayerToRegenerate(int manaFromDifferentItems)
-        { 
-            manaForPlayerToRegenerate = manaFromDifferentItems;
-        }
-
-        public float GetManaRegenerationTimerDelay()
-        {
-            return manaRegenerationTimerDelay;
-        }
-
-        public void SetManaRegenerationTimerDelay(float timeFromDifferentItems)
-        { 
-            manaRegenerationTimerDelay = timeFromDifferentItems;
-        }
-
-        #endregion
     }
 }

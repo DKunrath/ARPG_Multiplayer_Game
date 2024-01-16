@@ -18,6 +18,9 @@ namespace DK
         protected bool fallingVelocityHasBeenSet = false;
         protected float inAirTimer = 0f;
 
+        [Header("Flags")]
+        public bool isRolling = false;
+
         protected virtual void Awake()
         { 
             characterManager = GetComponent<CharacterManager>();

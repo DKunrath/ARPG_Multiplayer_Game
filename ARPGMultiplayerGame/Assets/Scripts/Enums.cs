@@ -34,6 +34,8 @@ public enum WeaponModelSlot
 public enum AttackType
 { 
     LightAttack01,
+    LightAttack02,
     SpellAttack01,
+    HeavyAttack01,
     // Add other attacks, like: Heavy, spell, jumping attack, dodging attack, etc
 }

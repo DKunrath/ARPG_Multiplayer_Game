@@ -38,6 +38,7 @@ namespace DK
         [Header("Attack Modifiers")]
         public float light_Attack_01_Modifier = 1.1f;
         public float spell_Attack_01_Modifier = 1.1f;
+        public float heavy_Attack_01_Modifier = 1.5f;
         // Heavy Attack Modifier
         // Critical Damage Modifier etc
 
@@ -57,6 +58,7 @@ namespace DK
         // Skill: LT on Console or ALT+RMB on Mouse&Keyboard
         [Header("Actions")]
         public WeaponItemAction oh_RB_and_LMB_Action; // One hand Right bumper action and One hand LeftMouseButton
+        public WeaponItemAction oh_RT_and_RMB_Action; // One hand Right trigger action   
 
         // Ash of War
 

@@ -82,16 +82,62 @@ namespace DK
 
         public void UpdateAnimatorMovementParameters(float horizontalValue, float verticalValue, bool isSprinting)
         {
-            float horizontalAmount = horizontalValue;
-            float verticalAmount = verticalValue;
+            float snappedHorizontal;
+            float snappedVertical;
+
+            // This if chain will round the horizontal movement to -1, -0.5, 0, 0.5 or 1
+
+            if (horizontalValue > 0 && horizontalValue <= 0.5f)
+            {
+                snappedHorizontal = 0.5f;
+            }
+            else if (horizontalValue > 0.5f && horizontalValue <= 1f)
+            {
+                snappedHorizontal = 1;
+            }
+            else if (horizontalValue < 0 && horizontalValue >= -0.5f)
+            {
+                snappedHorizontal = -0.5f;
+            }
+            else if (horizontalValue < -0.5f && horizontalValue >= -1f)
+            {
+                snappedHorizontal = -1;
+            }
+            else
+            {
+                snappedHorizontal = 0;
+            }
+
+            // This if chain will round the vertical movement to -1, -0.5, 0, 0.5 or 1
+
+            if (verticalValue > 0 && verticalValue <= 0.5f)
+            {
+                snappedVertical = 0.5f;
+            }
+            else if (verticalValue > 0.5f && verticalValue <= 1f)
+            {
+                snappedVertical = 1;
+            }
+            else if (verticalValue < 0 && verticalValue >= -0.5f)
+            {
+                snappedVertical = -0.5f;
+            }
+            else if (verticalValue < -0.5f && verticalValue >= -1f)
+            {
+                snappedVertical = -1;
+            }
+            else
+            {
+                snappedVertical = 0;
+            }
 
             if (isSprinting)
             {
-                verticalAmount = 2;
+                snappedVertical = 2;
             }
 
-            characterManager.animator.SetFloat(horizontal, horizontalAmount, 0.1f, Time.deltaTime);
-            characterManager.animator.SetFloat(vertical, verticalAmount, 0.1f, Time.deltaTime);
+            characterManager.animator.SetFloat(horizontal, snappedHorizontal, 0.1f, Time.deltaTime);
+            characterManager.animator.SetFloat(vertical, snappedVertical, 0.1f, Time.deltaTime);
         }
 
         public virtual void PlayTargetActionAnimation(

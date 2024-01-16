@@ -50,10 +50,16 @@ namespace DK
                 horizontalMovement = player.characterNetworkManager.horizontalMovement.Value;
                 moveAmount = player.characterNetworkManager.networkMoveAmount.Value;
 
-                // If not locked on, pass move amount
-                player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.playerNetworkManager.isSprinting.Value);
-
-                // If locked on, pass horizontal and vertical
+                // If we are not locked on, only use the move amount
+                if (!player.playerNetworkManager.isLockedOn.Value || player.playerNetworkManager.isSprinting.Value)
+                {
+                    player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.playerNetworkManager.isSprinting.Value);
+                }
+                // If we are locked on, pass the horizontal movement as well
+                else
+                {
+                    player.playerAnimatorManager.UpdateAnimatorMovementParameters(horizontalMovement, verticalMovement, player.playerNetworkManager.isSprinting.Value);
+                }
             }
         }
 
@@ -72,8 +78,8 @@ namespace DK
 
         private void GetVerticalAndHorizontalInputs()
         {
-            verticalMovement = PlayerInputManager.Instance.verticalInput;
-            horizontalMovement = PlayerInputManager.Instance.horizontalInput;
+            verticalMovement = PlayerInputManager.Instance.vertical_Input;
+            horizontalMovement = PlayerInputManager.Instance.horizontal_Input;
             moveAmount = PlayerInputManager.Instance.moveAmount;
 
             // Clamp the movements
@@ -125,8 +131,8 @@ namespace DK
             {
                 Vector3 freeFallDirection;
 
-                freeFallDirection = PlayerCamera.Instance.transform.forward * PlayerInputManager.Instance.verticalInput;
-                freeFallDirection += PlayerCamera.Instance.transform.right * PlayerInputManager.Instance.horizontalInput;
+                freeFallDirection = PlayerCamera.Instance.transform.forward * PlayerInputManager.Instance.vertical_Input;
+                freeFallDirection += PlayerCamera.Instance.transform.right * PlayerInputManager.Instance.horizontal_Input;
                 freeFallDirection.y = 0;
 
                 player.characterController.Move(freeFallDirection * freeFallSpeed * Time.deltaTime);
@@ -135,22 +141,60 @@ namespace DK
 
         private void HandleRotation()
         {
+            if (player.isDead.Value) return;
+
             if (!player.canRotate) return;
 
-            targetRotationDirection = Vector3.zero;
-            targetRotationDirection = PlayerCamera.Instance.cameraObject.transform.forward * verticalMovement;
-            targetRotationDirection = targetRotationDirection + PlayerCamera.Instance.cameraObject.transform.right * horizontalMovement;
-            targetRotationDirection.Normalize();
-            targetRotationDirection.y = 0;
-
-            if (targetRotationDirection == Vector3.zero)
+            if (player.playerNetworkManager.isLockedOn.Value)
             {
-                targetRotationDirection = transform.forward;
-            }
+                if (player.playerNetworkManager.isSprinting.Value || player.playerLocomotionManager.isRolling)
+                {
+                    Vector3 targetDirection = Vector3.zero;
+                    targetDirection = PlayerCamera.Instance.transform.forward * verticalMovement;
+                    targetDirection += PlayerCamera.Instance.cameraObject.transform.right * horizontalMovement;
+                    targetDirection.Normalize();
+                    targetDirection.y = 0;
 
-            Quaternion newRotation = Quaternion.LookRotation(targetRotationDirection);
-            Quaternion targetRotation = Quaternion.Slerp(transform.rotation, newRotation, rotationSpeed * Time.deltaTime);
-            transform.rotation = targetRotation;
+                    if (targetDirection == Vector3.zero)
+                    {
+                        targetDirection = transform.forward;
+                    }
+
+                    Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+                    Quaternion finalRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+                    transform.rotation = finalRotation;
+                }
+                else
+                {
+                    if (player.playerCombatManager.currentTarget == null) return;
+
+                    Vector3 targetDirection;
+                    targetDirection = player.playerCombatManager.currentTarget.transform.position - transform.position;
+                    targetDirection.y = 0;
+                    targetDirection.Normalize();
+
+                    Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+                    Quaternion finalRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+                    transform.rotation = finalRotation;
+                }
+            }
+            else
+            {
+                targetRotationDirection = Vector3.zero;
+                targetRotationDirection = PlayerCamera.Instance.cameraObject.transform.forward * verticalMovement;
+                targetRotationDirection = targetRotationDirection + PlayerCamera.Instance.cameraObject.transform.right * horizontalMovement;
+                targetRotationDirection.Normalize();
+                targetRotationDirection.y = 0;
+
+                if (targetRotationDirection == Vector3.zero)
+                {
+                    targetRotationDirection = transform.forward;
+                }
+
+                Quaternion newRotation = Quaternion.LookRotation(targetRotationDirection);
+                Quaternion targetRotation = Quaternion.Slerp(transform.rotation, newRotation, rotationSpeed * Time.deltaTime);
+                transform.rotation = targetRotation;
+            }
         }
 
         public void HandleSprinting()
@@ -182,8 +226,8 @@ namespace DK
             // If we are moving when we attempt to dodge, we perform a roll
             if (PlayerInputManager.Instance.moveAmount > 0)
             {
-                rollDirection = PlayerCamera.Instance.cameraObject.transform.forward * PlayerInputManager.Instance.verticalInput;
-                rollDirection += PlayerCamera.Instance.cameraObject.transform.right * PlayerInputManager.Instance.horizontalInput;
+                rollDirection = PlayerCamera.Instance.cameraObject.transform.forward * PlayerInputManager.Instance.vertical_Input;
+                rollDirection += PlayerCamera.Instance.cameraObject.transform.right * PlayerInputManager.Instance.horizontal_Input;
                 rollDirection.y = 0;
                 rollDirection.Normalize();
 
@@ -191,6 +235,7 @@ namespace DK
                 player.transform.rotation = playerRotation;
 
                 player.playerAnimatorManager.PlayTargetActionAnimation("Roll_Forward_01", true, true);
+                player.playerLocomotionManager.isRolling = true;
             }
             // If we are not moving, we perform a backstep
             else
@@ -216,8 +261,8 @@ namespace DK
 
             player.playerNetworkManager.isJumping.Value = true;
 
-            jumpDirection = PlayerCamera.Instance.cameraObject.transform.forward * PlayerInputManager.Instance.verticalInput;
-            jumpDirection += PlayerCamera.Instance.cameraObject.transform.right * PlayerInputManager.Instance.horizontalInput;
+            jumpDirection = PlayerCamera.Instance.cameraObject.transform.forward * PlayerInputManager.Instance.vertical_Input;
+            jumpDirection += PlayerCamera.Instance.cameraObject.transform.right * PlayerInputManager.Instance.horizontal_Input;
             jumpDirection.y = 0;
 
             if (jumpDirection != Vector3.zero)

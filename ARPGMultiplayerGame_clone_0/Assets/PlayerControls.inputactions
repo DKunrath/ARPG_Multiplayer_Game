@@ -306,9 +306,45 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "RMB Attack Keyboard",
+                    "type": "Button",
+                    "id": "765d471b-afb9-4e0d-aa4b-85bc4950bbbd",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "RB Attack Console",
                     "type": "Button",
                     "id": "344c8c65-3622-47e4-9083-fa4af1800463",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RT Heavy Attack Console",
+                    "type": "Button",
+                    "id": "9cd4b97c-c131-49e5-9e89-fd3066b30efa",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Lock On Keyboard",
+                    "type": "Button",
+                    "id": "3f370d4c-8c11-4a43-a74c-800d592c3f73",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Lock On Console",
+                    "type": "Button",
+                    "id": "7c3873f5-c8ab-45a1-98bf-04d00c960f36",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -412,6 +448,50 @@
                     "processors": "",
                     "groups": "",
                     "action": "RB Attack Console",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f75f8c09-5682-4b40-afda-1f737a43915e",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Lock On Keyboard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "83928a19-8b28-407c-b0c2-e9be34a0dc96",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Lock On Console",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a94c67bb-c970-4d55-ba39-04404e1ffe8a",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RT Heavy Attack Console",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a57cadd0-553f-4fdb-9370-c5a88665b8b6",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RMB Attack Keyboard",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -18,17 +18,32 @@ namespace DK
             playerManager = GetComponent<PlayerManager>();
         }
 
+        private void Update()
+        {
+            if (playerManager.IsOwner)
+            {
+                RegenerateSoulPowerBasedOnItemsEquipped();
+            }
+        }
+
         public void PerformWeaponBasedAction(WeaponItemAction weaponAction, WeaponItem weaponPerformingAction)
         {
             if (playerManager.IsOwner)
             {
-                // Perform the action locally
-                weaponAction.AttemptToPerformAction(playerManager, weaponPerformingAction);
+                if ((weaponPerformingAction.baseSoulPowerCost * weaponPerformingAction.lightAttackSoulPowerCostMultiplier) > playerManager.playerNetworkManager.currentSoulPower.Value)
+                {
+                    Debug.Log("You dont have soul power enough to do that!");
+                    return;
+                }
+                else
+                {
+                    // Perform the action locally
+                    weaponAction.AttemptToPerformAction(playerManager, weaponPerformingAction);
 
-                // Notify the server that an action is being performed, and perform the action on other clients
-                playerManager.playerNetworkManager.NotifyTheServerOfWeaponActionServerRpc(NetworkManager.Singleton.LocalClientId, weaponAction.actionID, weaponPerformingAction.itemID);
+                    // Notify the server that an action is being performed, and perform the action on other clients
+                    playerManager.playerNetworkManager.NotifyTheServerOfWeaponActionServerRpc(NetworkManager.Singleton.LocalClientId, weaponAction.actionID, weaponPerformingAction.itemID);
+                }
             }
-
         }
 
         public void DrainSoulPowerBasedOnAttack()
@@ -51,7 +66,49 @@ namespace DK
                     break;
             }
 
+            if (playerManager.playerNetworkManager.currentSoulPower.Value < soulPower)
+            {
+                Debug.Log("You dont have soul power enough to do that!");
+                return;
+            }
+
             playerManager.playerNetworkManager.currentSoulPower.Value -= Mathf.RoundToInt(soulPower);
+            PlayerUIManager.Instance.playerUIHUDManager.SetNewSoulPowerValue(0, Mathf.RoundToInt(playerManager.playerNetworkManager.currentSoulPower.Value));
+        }
+
+        public void RegenerateSoulPowerBasedOnItemsEquipped()
+        {
+            if (!playerManager.IsOwner) return;
+
+            // Prevents us from regenerating soul power when its already full
+            if (playerManager.playerNetworkManager.currentSoulPower.Value == playerManager.playerNetworkManager.maxSoulPower.Value) return;
+
+            playerManager.playerNetworkManager.timeToWaitBeforeRegeneration += Time.deltaTime;
+
+            if (playerManager.playerNetworkManager.currentSoulPower.Value < playerManager.playerNetworkManager.maxSoulPower.Value && 
+                playerManager.playerNetworkManager.timeToWaitBeforeRegeneration > playerManager.playerNetworkManager.soulPowerRegenerationTimerDelay)
+            {
+                playerManager.playerNetworkManager.currentSoulPower.Value += playerManager.playerNetworkManager.soulPowerForCharacterToRegenerate.Value;
+                
+                PlayerUIManager.Instance.playerUIHUDManager.SetNewSoulPowerValue(0, Mathf.RoundToInt(playerManager.playerNetworkManager.currentSoulPower.Value));
+
+                if (playerManager.playerNetworkManager.currentSoulPower.Value > playerManager.playerNetworkManager.maxSoulPower.Value)
+                {
+                    playerManager.playerNetworkManager.currentSoulPower.Value = playerManager.playerNetworkManager.maxSoulPower.Value;
+                }
+
+                playerManager.playerNetworkManager.timeToWaitBeforeRegeneration = 0;
+            }
+        }
+
+        public override void SetTarget(CharacterManager newTarget)
+        {
+            base.SetTarget(newTarget);
+
+            if (playerManager.IsOwner)
+            {
+                PlayerCamera.Instance.SetLockCameraHeight();
+            }
         }
     }
 }

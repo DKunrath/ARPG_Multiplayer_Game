@@ -12,6 +12,7 @@ namespace DK
         [Header("Weapon Attack Modifiers")]
         public float light_Attack_01_Modifier;
         public float spell_Attack_01_Modifier;
+        public float heavy_Attack_01_Modifier;
 
         protected override void Awake()
         {
@@ -78,6 +79,9 @@ namespace DK
                     break;
                 case AttackType.SpellAttack01:
                     ApplyAttackDamageModifiers(spell_Attack_01_Modifier, damageEffect);
+                    break;
+                case AttackType.HeavyAttack01:
+                    ApplyAttackDamageModifiers(heavy_Attack_01_Modifier, damageEffect);
                     break;
                 default: 
                     break;

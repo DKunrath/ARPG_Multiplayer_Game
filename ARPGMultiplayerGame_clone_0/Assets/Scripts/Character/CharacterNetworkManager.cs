@@ -13,18 +13,23 @@ namespace DK
         public NetworkVariable<Vector3> networkPosition = new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public Vector3 networkPositionVelocity;
         public float networkPositionSmoothTime = 0.1f;
+
         [Header("Rotation")]
         public NetworkVariable<Quaternion> networkRotation = new NetworkVariable<Quaternion>(Quaternion.identity, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public float networkRotationSmoothTime = 0.1f;
+
         [Header("Animator")]
         public NetworkVariable<float> horizontalMovement = new NetworkVariable<float>(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<float> verticalMovement = new NetworkVariable<float>(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<float> networkMoveAmount = new NetworkVariable<float>(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
+        [Header("Target")]
+        public NetworkVariable<ulong> currentTargetNetworkObjectID = new NetworkVariable<ulong>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
         [Header("Flags")]
+        public NetworkVariable<bool> isLockedOn = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<bool> isSprinting = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<bool> isJumping = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-
 
         [Header("Stats")]
         public NetworkVariable<int> vitality = new NetworkVariable<int>(1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -35,6 +40,11 @@ namespace DK
         public NetworkVariable<float> currentSoulPower = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<float> maxHealth = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<float> maxSoulPower = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+        [Header("Soul Power Regeneration Stats")]
+        public NetworkVariable<float> soulPowerForCharacterToRegenerate = new NetworkVariable<float>(1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public float soulPowerRegenerationTimerDelay = 1f; // Tempo que deve ser esperado antes de regenerar uma porcentagem da mana
+        public float timeToWaitBeforeRegeneration = 0f;
 
         protected virtual void Awake()
         { 
@@ -55,6 +65,22 @@ namespace DK
                 { 
                     currentHealth.Value = maxHealth.Value;
                 }
+            }
+        }
+
+        public void OnLockOnTargetIDChange(ulong oldID, ulong newID)
+        {
+            if (!IsOwner)
+            {
+                characterManager.characterCombatManager.currentTarget = NetworkManager.Singleton.SpawnManager.SpawnedObjects[newID].gameObject.GetComponent<CharacterManager>();
+            }
+        }
+
+        public void OnIsLockedOnChanged(bool old, bool isLockedOn)
+        {
+            if (!isLockedOn)
+            {
+                characterManager.characterCombatManager.currentTarget = null;
             }
         }
 

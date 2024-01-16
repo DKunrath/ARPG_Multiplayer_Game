@@ -29,6 +29,7 @@ namespace DK
 
             meleeDamageCollider.light_Attack_01_Modifier = weapon.light_Attack_01_Modifier;
             meleeDamageCollider.spell_Attack_01_Modifier = weapon.spell_Attack_01_Modifier;
+            meleeDamageCollider.heavy_Attack_01_Modifier = weapon.heavy_Attack_01_Modifier;
         }
     }
 }
