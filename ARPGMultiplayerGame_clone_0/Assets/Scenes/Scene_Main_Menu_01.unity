@@ -657,7 +657,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.0625, y: 0.16666667}
   m_AnchorMax: {x: 0.9375, y: 0.8333333}
-  m_AnchoredPosition: {x: -4.1273, y: 0}
+  m_AnchoredPosition: {x: -4.127289, y: 0}
   m_SizeDelta: {x: -331.3647, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &284040843
@@ -6281,6 +6281,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SpSlider
+      objectReference: {fileID: 0}
+    - target: {fileID: 2935571061717023653, guid: b901a849e5f603043812cbe5cdb4277e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -4.127289
       objectReference: {fileID: 0}
     - target: {fileID: 3652783854450386206, guid: b901a849e5f603043812cbe5cdb4277e,
         type: 3}
